@@ -1,4 +1,5 @@
-export const DEBUG = true;
+const urlParams = new URLSearchParams(window.location.search);
+export const DEBUG = urlParams.get('mode') === "debug";
 
 // ref for lumens: http://www.power-sure.com/lumens.htm
 export const BULB_LUMINOUS_POWERS = {
@@ -45,6 +46,6 @@ export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   shadows: true,
   exposure: 0.68,
   bulbPower: BULB_POWER_OPTIONS[4],
-  hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[2],
+  hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[3],
   bulbDist: 5
 };

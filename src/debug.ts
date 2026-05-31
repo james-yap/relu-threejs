@@ -31,6 +31,7 @@ copyPointerButton.addEventListener('click', (event) => {
 });
 debugPanel.appendChild(debugStats);
 debugPanel.appendChild(copyPointerButton);
+debugPanel.hidden = !DEBUG;
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
