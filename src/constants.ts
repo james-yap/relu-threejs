@@ -33,7 +33,7 @@ export const HEMI_LUMINOUS_IRRADIANCES = {
 export type HemiIrradiance = keyof typeof HEMI_LUMINOUS_IRRADIANCES;
 export const HEMI_IRRADIANCE_OPTIONS = Object.keys(HEMI_LUMINOUS_IRRADIANCES) as HemiIrradiance[];
 
-export type DebugParams = {
+export type RuntimeParams = {
   shadows: boolean;
   exposure: number;
   bulbPower: BulbPower;
@@ -41,7 +41,7 @@ export type DebugParams = {
   bulbDist: number;
 };
 
-export const DEFAULT_DEBUG_PARAMS: DebugParams = {
+export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   shadows: true,
   exposure: 0.68,
   bulbPower: BULB_POWER_OPTIONS[4],

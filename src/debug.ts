@@ -5,19 +5,17 @@ import {
   BULB_LUMINOUS_POWERS,
   BULB_POWER_OPTIONS,
   DEBUG,
-  DEFAULT_DEBUG_PARAMS,
   HEMI_IRRADIANCE_OPTIONS,
-  HEMI_LUMINOUS_IRRADIANCES,
+  type RuntimeParams,
 } from './constants';
-import type { DebugParams } from './constants';
 
 type DebugDependencies = {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
+  params: RuntimeParams
 };
 
-const params: DebugParams = { ...DEFAULT_DEBUG_PARAMS };
 let debugDependencies: DebugDependencies | null = null;
 export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
@@ -99,14 +97,13 @@ bulbLight.position.set(0, 2, 0);
 bulbLight.castShadow = true;
 
 
-const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0f0e0d, 0.02);
 
 export function initDebug(dependencies: DebugDependencies) {
   debugDependencies = dependencies;
 
   if (!DEBUG) return;
 
-  const { camera, renderer, scene } = dependencies;
+  const { camera, renderer, scene, params } = dependencies;
 
   const gui = new GUI();
   gui.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS);
@@ -121,7 +118,6 @@ export function initDebug(dependencies: DebugDependencies) {
   controls.maxDistance = 20;
 
   scene.add(bulbLight);
-  scene.add(hemiLight);
   scene.add(floorMesh);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
@@ -140,6 +136,8 @@ export function initDebug(dependencies: DebugDependencies) {
 export function renderDebug() {
   if (!DEBUG || debugDependencies === null) return;
 
+  const { params } = debugDependencies
+
   updateCameraPositionPanel(debugDependencies.camera);
 
   debugDependencies.renderer.toneMappingExposure = params.exposure;
@@ -149,7 +147,6 @@ export function renderDebug() {
 
   bulbLight.power = BULB_LUMINOUS_POWERS[params.bulbPower];
   bulbMat.emissiveIntensity = bulbLight.intensity / Math.pow(0.02, 2.0); // convert from intensity to irradiance at bulb surface
-  hemiLight.intensity = HEMI_LUMINOUS_IRRADIANCES[params.hemiIrradiance];
 }
 
 function updateCameraPositionPanel(camera: THREE.Camera) {
@@ -179,6 +176,7 @@ function updatePointerPosition(event: MouseEvent, renderer: THREE.WebGLRenderer,
 }
 
 function updateBulbPosition() {
+  const { params } = debugDependencies;
   pointerToCamera.subVectors(cameraWorldPos, pointerOnPlane).normalize().multiplyScalar(params.bulbDist);
   bulbPos.addVectors(pointerOnPlane, pointerToCamera);
   bulbLight.position.copy(bulbPos);
