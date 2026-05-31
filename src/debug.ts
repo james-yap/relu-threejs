@@ -23,6 +23,7 @@ let debugDependencies: DebugDependencies | null = null;
 export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
 const copyPointerButton = document.createElement('button');
+const copyCameraButton = document.createElement('button');
 let isCopyMode = false;
 copyPointerButton.type = 'button';
 copyPointerButton.className = 'debug-panel-copy';
@@ -32,8 +33,16 @@ copyPointerButton.addEventListener('click', (event) => {
   isCopyMode = true;
   copyPointerButton.textContent = 'Click floor to copy';
 });
+copyCameraButton.type = 'button';
+copyCameraButton.className = 'debug-panel-copy';
+copyCameraButton.textContent = 'Copy camera';
+copyCameraButton.addEventListener('click', async (event) => {
+  event.stopPropagation();
+  await copyCameraPosition();
+});
 debugPanel.appendChild(debugStats);
 debugPanel.appendChild(copyPointerButton);
+debugPanel.appendChild(copyCameraButton);
 debugPanel.hidden = !DEBUG;
 
 const raycaster = new THREE.Raycaster();
@@ -101,7 +110,7 @@ const floorGridHelperBase = new THREE.GridHelper(
   0x00ffff,
   0x226666
 );
-const floorGridHelperGeometry = new LineSegmentsGeometry().fromEdgesGeometry(floorGridHelperBase.geometry);
+const floorGridHelperGeometry = new LineSegmentsGeometry().fromLineSegments(floorGridHelperBase);
 const floorGridHelperMaterial = new LineMaterial({
   color: 0x58C4DD,
   linewidth: 5, // Thickness in pixels!
@@ -145,7 +154,7 @@ export function initDebug(dependencies: DebugDependencies) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1;
   controls.maxDistance = 20;
-  controls.target.set(-4.15, 2.31, 0.00)
+  controls.target.set(params.startingCameraPos[0], params.startingCameraPos[1], 0)
   controls.update()
 
   // scene.add(bulbLight);
@@ -154,7 +163,7 @@ export function initDebug(dependencies: DebugDependencies) {
 
   renderer.domElement.addEventListener('mousemove', (event) => {
     updatePointerPosition(event, renderer, camera);
-    // updateBulbPosition();
+    updateBulbPosition();
   });
 
   renderer.domElement.addEventListener('pointerdown', async (event) => {
@@ -231,6 +240,27 @@ async function copyPointerPosition() {
   }, 1200);
 }
 
+async function copyCameraPosition() {
+  if (debugDependencies === null) return;
+
+  try {
+    await navigator.clipboard.writeText(formatCameraPosition(debugDependencies.camera));
+    copyCameraButton.textContent = 'Copied camera!';
+  } catch (error) {
+    console.error('Failed to copy camera position', error);
+    copyCameraButton.textContent = 'Copy failed';
+  }
+
+  window.setTimeout(() => {
+    copyCameraButton.textContent = 'Copy camera';
+  }, 1200);
+}
+
 function formatPointerPosition() {
   return `${pointerOnPlane.x.toFixed(2)}, ${pointerOnPlane.y.toFixed(2)}, ${pointerOnPlane.z.toFixed(2)}`;
+}
+
+function formatCameraPosition(camera: THREE.Camera) {
+  camera.getWorldPosition(cameraWorldPos);
+  return `${cameraWorldPos.x.toFixed(2)}, ${cameraWorldPos.y.toFixed(2)}, ${cameraWorldPos.z.toFixed(2)}`;
 }

@@ -28,9 +28,8 @@ setupResize(renderer, camera);
 
 scene.add(hemiLight);
 
-camera.position.set(-4.15, 2.31, 0.00)
-camera.position.z = 3;
-camera.lookAt(-4.15, 2.31, 0.00)
+camera.position.set(...params.startingCameraPos)
+camera.lookAt(...params.startingCameraPos)
 
 interactions.connect(renderer, camera);
 

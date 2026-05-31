@@ -40,6 +40,7 @@ export type RuntimeParams = {
   bulbPower: BulbPower;
   hemiIrradiance: HemiIrradiance;
   bulbDist: number;
+  startingCameraPos: [number, number, number];
 };
 
 export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
@@ -47,5 +48,6 @@ export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   exposure: 0.68,
   bulbPower: BULB_POWER_OPTIONS[5],
   hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[3],
-  bulbDist: 2
+  bulbDist: 2,
+  startingCameraPos: [-4.06, 2.25, 3.00]
 };
