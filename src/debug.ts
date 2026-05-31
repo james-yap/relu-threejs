@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
+import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import {
   BULB_LUMINOUS_POWERS,
@@ -79,10 +82,30 @@ textureLoader.load('textures/hardwood2_roughness.jpg', function (map) {
 
 });
 
-const floorGeometry = new THREE.PlaneGeometry(20, 20);
+const FLOOR_SIZE = 50;
+const GRID_SIZE = 50;
+const GRID_CELL_SIZE = 0.5;
+const GRID_Z_OFFSET = 0.01;
+const floorGeometry = new THREE.PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE);
 const floorMesh = new THREE.Mesh(floorGeometry, floorMat);
 floorMesh.receiveShadow = true;
 // floorMesh.rotation.x = - Math.PI / 2.0;
+const floorGridHelperBase = new THREE.GridHelper(
+  GRID_SIZE,
+  Math.round(GRID_SIZE / GRID_CELL_SIZE),
+  0x00ffff,
+  0x226666
+);
+const floorGridHelperGeometry = new LineSegmentsGeometry().fromEdgesGeometry(floorGridHelperBase.geometry);
+const floorGridHelperMaterial = new LineMaterial({
+  color: 0x58C4DD,
+  linewidth: 5, // Thickness in pixels!
+  resolution: new THREE.Vector2(window.innerWidth, window.innerHeight) // Required
+});
+const floorGridHelper = new LineSegments2(floorGridHelperGeometry, floorGridHelperMaterial)
+floorGridHelper.rotation.x = Math.PI / 2; // rotates the Local Axes (locally, plane still in XZ)
+floorGridHelper.position.z = GRID_Z_OFFSET;
+floorGridHelper.scale.set(16, 1, 9) // scales in the Local Axes
 
 
 const bulbGeometry = new THREE.SphereGeometry(0.02, 16, 8);
@@ -94,7 +117,7 @@ const bulbMat = new THREE.MeshStandardMaterial({
   color: 0x000000
 });
 bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMat));
-bulbLight.position.set(0, 2, 0);
+bulbLight.position.set(0, 0, 5);
 bulbLight.castShadow = true;
 
 
@@ -120,6 +143,7 @@ export function initDebug(dependencies: DebugDependencies) {
 
   scene.add(bulbLight);
   scene.add(floorMesh);
+  scene.add(floorGridHelper);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
     updatePointerPosition(event, renderer, camera);
@@ -177,6 +201,8 @@ function updatePointerPosition(event: MouseEvent, renderer: THREE.WebGLRenderer,
 }
 
 function updateBulbPosition() {
+  if (debugDependencies === null) return;
+
   const { params } = debugDependencies;
   pointerToCamera.subVectors(cameraWorldPos, pointerOnPlane).normalize().multiplyScalar(params.bulbDist);
   bulbPos.addVectors(pointerOnPlane, pointerToCamera);

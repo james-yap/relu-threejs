@@ -29,7 +29,7 @@ initInteractions({ scene, camera, renderer, interactions })
 
 scene.add(hemiLight);
 
-camera.position.z = 10;
+camera.position.z = 5;
 camera.lookAt(0, 0, 0)
 
 interactions.connect(renderer, camera);

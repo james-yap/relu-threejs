@@ -16,7 +16,7 @@ const element = document.createElement('div');
 element.id = "inter"
 element.innerHTML = '<h1>ReLU, explained quickly.</h1>'
 
-const planeGeometry = new THREE.PlaneGeometry(20, 10);
+const planeGeometry = new THREE.PlaneGeometry(5, 2.5);
 
 const material = new THREE.MeshStandardMaterial({
   roughness: 0,
@@ -30,8 +30,11 @@ const wireMaterial = new THREE.MeshBasicMaterial({
   wireframe: true,
 })
 
-const mesh = new THREE.Mesh(planeGeometry, DEBUG ? wireMaterial : material);
-mesh.position.set(0.09, 5.20, 0.00);
+const mesh = new THREE.Mesh(planeGeometry, material);
+const wireframeHelper = new THREE.Mesh(planeGeometry, wireMaterial);
+if (DEBUG) mesh.add(wireframeHelper);
+
+mesh.position.set(-4.04, 3.64, 0.00);
 mesh.position.z = 0.05;
 
 export function initInteractions(interactionDependencies: InteractionDependencies) {
