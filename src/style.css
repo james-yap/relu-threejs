@@ -3,8 +3,32 @@ body {
   overflow: hidden;
 }
 
-[data-html-in-canvas-host] {
-  pointer-events: none !important;
+#inter {
+  padding: 30px;
+  /* background: #aaa; */
+  /* color: #000; */
+  color: blue;
+  font-family: sans-serif;
+  font-size: 30px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+#debug-panel {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+  min-width: 160px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgb(0 0 0 / 70%);
+  color: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  white-space: pre;
 }
 
 .debug-panel-copy {

@@ -5,6 +5,7 @@ import './style.css'
 import { setupResize } from './eventListeners';
 import { setupPolyfill } from './setupPolyfill'
 import { debugPanel, initDebug, renderDebug } from './debug'
+import { initInteractions } from './interactions';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -15,8 +16,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
 document.getElementById('app')!.appendChild(renderer.domElement)
 
+initDebug({ scene, camera, renderer });
 setupPolyfill(debugPanel);
 setupResize(renderer, camera);
+initInteractions({ scene, camera, renderer, interactions })
 
 camera.position.z = 10;
 camera.lookAt(0, 0, 0)
@@ -29,5 +32,3 @@ function animate(_time: number) {
   interactions.update();
   renderer.render(scene, camera);
 }
-
-initDebug({ scene, camera, renderer });
