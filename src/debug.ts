@@ -13,7 +13,29 @@ import type { DebugParams } from './constants';
 import { camera, renderer, scene } from './main';
 
 const params: DebugParams = { ...DEFAULT_DEBUG_PARAMS };
+export const debugPanel = document.getElementById('debug-panel')!;
+const debugStats = document.createElement('div');
+const copyPointerButton = document.createElement('button');
+copyPointerButton.type = 'button';
+copyPointerButton.className = 'debug-panel-copy';
+copyPointerButton.textContent = 'Copy pointer position';
+copyPointerButton.addEventListener('click', async (event) => {
+  event.stopPropagation();
 
+  try {
+    await navigator.clipboard.writeText(formatPointerPosition());
+    copyPointerButton.textContent = 'Copied!';
+  } catch (error) {
+    console.error('Failed to copy pointer position', error);
+    copyPointerButton.textContent = 'Copy failed';
+  }
+
+  window.setTimeout(() => {
+    copyPointerButton.textContent = 'Copy pointer position';
+  }, 1200);
+});
+debugPanel.appendChild(debugStats);
+debugPanel.appendChild(copyPointerButton);
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -130,9 +152,8 @@ export function renderDebug() {
 function updateCameraPositionPanel() {
   camera.getWorldPosition(cameraWorldPos);
 
-  const panel = document.getElementById('debug-panel')!
   const { x, y, z } = cameraWorldPos;
-  panel.textContent = `Camera position
+  debugStats.textContent = `Camera position
 x: ${x.toFixed(2)}
 y: ${y.toFixed(2)}
 z: ${z.toFixed(2)}
@@ -141,4 +162,8 @@ Pointer position
 x: ${pointerOnPlane.x.toFixed(2)}
 y: ${pointerOnPlane.y.toFixed(2)}
 z: ${pointerOnPlane.z.toFixed(2)}`;
+}
+
+function formatPointerPosition() {
+  return `${pointerOnPlane.x.toFixed(2)}, ${pointerOnPlane.y.toFixed(2)}, ${pointerOnPlane.z.toFixed(2)}`;
 }

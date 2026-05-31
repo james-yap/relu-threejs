@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import './style.css'
 import './eventListeners';
+import './setupPolyfill'
 import { initDebug, renderDebug } from './debug'
 
 export const scene = new THREE.Scene();

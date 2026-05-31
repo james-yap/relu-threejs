@@ -18,3 +18,30 @@ body {
   pointer-events: none;
   white-space: pre;
 }
+
+.debug-panel-copy {
+  display: block;
+  margin-top: 6px;
+  padding: 4px 6px;
+  border: 1px solid rgb(255 255 255 / 40%);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  pointer-events: auto;
+}
+
+.debug-panel-copy:hover {
+  background: rgb(255 255 255 / 22%);
+}
+
+.debug-panel-notice {
+  margin-top: 8px;
+  pointer-events: auto;
+  white-space: normal;
+}
+
+.debug-panel-notice a {
+  color: #9ad1ff;
+}
