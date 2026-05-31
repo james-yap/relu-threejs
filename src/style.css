@@ -1,73 +1,10 @@
 body {
   margin: 0;
+  overflow: hidden;
 }
 
 [data-html-in-canvas-host] {
   pointer-events: none !important;
-}
-
-#draw_element {
-  width: 600px;
-  padding: 30px;
-  pointer-events: none !important;
-  background: #aaa;
-  color: #000;
-  font-family: sans-serif;
-  font-size: 30px;
-  line-height: 1.5;
-  text-align: center;
-}
-
-#draw_element img {
-  animation: swing 1s ease-in-out infinite alternate;
-}
-
-#draw_element input[type="text"] {
-  width: 80%;
-  pointer-events: auto !important;
-  margin-top: 10px;
-  padding: 8px 12px;
-  border: 2px solid #888;
-  border-radius: 6px;
-  font-size: 24px;
-}
-
-#draw_element button {
-  margin-top: 10px;
-  pointer-events: auto !important;
-  padding: 8px 20px;
-  border: none;
-  border-radius: 6px;
-  background: #4caf50;
-  color: #fff;
-  cursor: pointer;
-  font-size: 24px;
-}
-
-#draw_element button:hover {
-  background: #2196f3;
-}
-
-@keyframes swing {
-  from { transform: rotate(-15deg); }
-  to { transform: rotate(15deg); }
-}
-
-#debug-panel {
-  position: fixed;
-  bottom: 12px;
-  right: 12px;
-  z-index: 10;
-  min-width: 160px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: rgb(0 0 0 / 70%);
-  color: #fff;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 12px;
-  line-height: 1.5;
-  pointer-events: none;
-  white-space: pre;
 }
 
 .debug-panel-copy {

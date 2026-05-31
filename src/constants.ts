@@ -46,5 +46,5 @@ export const DEFAULT_DEBUG_PARAMS: DebugParams = {
   exposure: 0.68,
   bulbPower: BULB_POWER_OPTIONS[4],
   hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[2],
-  bulbDist: 1
+  bulbDist: 5
 };
