@@ -137,7 +137,7 @@ x: ${x.toFixed(2)}
 y: ${y.toFixed(2)}
 z: ${z.toFixed(2)}
 
-Mouse position
+Pointer position
 x: ${pointerOnPlane.x.toFixed(2)}
 y: ${pointerOnPlane.y.toFixed(2)}
 z: ${pointerOnPlane.z.toFixed(2)}`;
