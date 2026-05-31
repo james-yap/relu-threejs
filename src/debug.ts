@@ -10,9 +10,15 @@ import {
   HEMI_LUMINOUS_IRRADIANCES,
 } from './constants';
 import type { DebugParams } from './constants';
-import { camera, renderer, scene } from './main';
+
+type DebugDependencies = {
+  scene: THREE.Scene;
+  camera: THREE.PerspectiveCamera;
+  renderer: THREE.WebGLRenderer;
+};
 
 const params: DebugParams = { ...DEFAULT_DEBUG_PARAMS };
+let debugDependencies: DebugDependencies | null = null;
 export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
 const copyPointerButton = document.createElement('button');
@@ -95,8 +101,12 @@ bulbLight.castShadow = true;
 
 const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0f0e0d, 0.02);
 
-export function initDebug() {
+export function initDebug(dependencies: DebugDependencies) {
+  debugDependencies = dependencies;
+
   if (!DEBUG) return;
+
+  const { camera, renderer, scene } = dependencies;
 
   const gui = new GUI();
   gui.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS);
@@ -115,29 +125,34 @@ export function initDebug() {
   scene.add(floorMesh);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
-    updatePointerPosition(event);
+    updatePointerPosition(event, renderer, camera);
     updateBulbPosition();
   });
 
   renderer.domElement.addEventListener('pointerdown', async (event) => {
     if (!isCopyMode || event.button !== 0) return;
 
-    updatePointerPosition(event);
+    updatePointerPosition(event, renderer, camera);
     await copyPointerPosition();
   });
 }
 
 export function renderDebug() {
-  if (!DEBUG) return;
+  if (!DEBUG || debugDependencies === null) return;
 
-  updateCameraPositionPanel();
+  updateCameraPositionPanel(debugDependencies.camera);
+
+  debugDependencies.renderer.toneMappingExposure = params.exposure;
+  debugDependencies.renderer.shadowMap.enabled = params.shadows;
+  bulbLight.castShadow = params.shadows;
+  floorMesh.receiveShadow = params.shadows;
 
   bulbLight.power = BULB_LUMINOUS_POWERS[params.bulbPower];
   bulbMat.emissiveIntensity = bulbLight.intensity / Math.pow(0.02, 2.0); // convert from intensity to irradiance at bulb surface
   hemiLight.intensity = HEMI_LUMINOUS_IRRADIANCES[params.hemiIrradiance];
 }
 
-function updateCameraPositionPanel() {
+function updateCameraPositionPanel(camera: THREE.Camera) {
   camera.getWorldPosition(cameraWorldPos);
 
   const { x, y, z } = cameraWorldPos;
@@ -152,7 +167,7 @@ y: ${pointerOnPlane.y.toFixed(2)}
 z: ${pointerOnPlane.z.toFixed(2)}`;
 }
 
-function updatePointerPosition(event: MouseEvent) {
+function updatePointerPosition(event: MouseEvent, renderer: THREE.WebGLRenderer, camera: THREE.Camera) {
   const rect = renderer.domElement.getBoundingClientRect();
   pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
