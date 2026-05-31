@@ -43,43 +43,48 @@ const cameraWorldPos = new THREE.Vector3();
 const pointerToCamera = new THREE.Vector3();
 const bulbPos = new THREE.Vector3();
 
-const floorMat = new THREE.MeshStandardMaterial({
-  roughness: 0.8,
-  color: 0xffffff,
-  metalness: 0.2,
-  bumpScale: 1
-});
-const textureLoader = new THREE.TextureLoader();
-textureLoader.load('textures/hardwood2_diffuse.jpg', function (map) {
-
-  map.wrapS = THREE.RepeatWrapping;
-  map.wrapT = THREE.RepeatWrapping;
-  map.anisotropy = 4;
-  map.repeat.set(10, 24);
-  map.colorSpace = THREE.SRGBColorSpace;
-  floorMat.map = map;
-  floorMat.needsUpdate = true;
-
-});
-textureLoader.load('textures/hardwood2_bump.jpg', function (map) {
-
-  map.wrapS = THREE.RepeatWrapping;
-  map.wrapT = THREE.RepeatWrapping;
-  map.anisotropy = 4;
-  map.repeat.set(10, 24);
-  floorMat.bumpMap = map;
-  floorMat.needsUpdate = true;
-
-});
-textureLoader.load('textures/hardwood2_roughness.jpg', function (map) {
-
-  map.wrapS = THREE.RepeatWrapping;
-  map.wrapT = THREE.RepeatWrapping;
-  map.anisotropy = 4;
-  map.repeat.set(10, 24);
-  floorMat.roughnessMap = map;
-  floorMat.needsUpdate = true;
-
+// const floorMat = new THREE.MeshStandardMaterial({
+//   roughness: 0.8,
+//   color: 0xffffff,
+//   metalness: 0.2,
+//   bumpScale: 1
+// });
+// const textureLoader = new THREE.TextureLoader();
+// textureLoader.load('textures/hardwood2_diffuse.jpg', function (map) {
+//
+//   map.wrapS = THREE.RepeatWrapping;
+//   map.wrapT = THREE.RepeatWrapping;
+//   map.anisotropy = 4;
+//   map.repeat.set(10, 24);
+//   map.colorSpace = THREE.SRGBColorSpace;
+//   floorMat.map = map;
+//   floorMat.needsUpdate = true;
+//
+// });
+// textureLoader.load('textures/hardwood2_bump.jpg', function (map) {
+//
+//   map.wrapS = THREE.RepeatWrapping;
+//   map.wrapT = THREE.RepeatWrapping;
+//   map.anisotropy = 4;
+//   map.repeat.set(10, 24);
+//   floorMat.bumpMap = map;
+//   floorMat.needsUpdate = true;
+//
+// });
+// textureLoader.load('textures/hardwood2_roughness.jpg', function (map) {
+//
+//   map.wrapS = THREE.RepeatWrapping;
+//   map.wrapT = THREE.RepeatWrapping;
+//   map.anisotropy = 4;
+//   map.repeat.set(10, 24);
+//   floorMat.roughnessMap = map;
+//   floorMat.needsUpdate = true;
+//
+// });
+const floorMat = new THREE.MeshBasicMaterial({
+  transparent: true,
+  opacity: 0,
+  depthWrite: false
 });
 
 const FLOOR_SIZE = 50;
@@ -140,14 +145,16 @@ export function initDebug(dependencies: DebugDependencies) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1;
   controls.maxDistance = 20;
+  controls.target.set(-4.15, 2.31, 0.00)
+  controls.update()
 
-  scene.add(bulbLight);
+  // scene.add(bulbLight);
   scene.add(floorMesh);
   scene.add(floorGridHelper);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
     updatePointerPosition(event, renderer, camera);
-    updateBulbPosition();
+    // updateBulbPosition();
   });
 
   renderer.domElement.addEventListener('pointerdown', async (event) => {
