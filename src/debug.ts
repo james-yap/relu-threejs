@@ -16,23 +16,14 @@ const params: DebugParams = { ...DEFAULT_DEBUG_PARAMS };
 export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
 const copyPointerButton = document.createElement('button');
+let isCopyMode = false;
 copyPointerButton.type = 'button';
 copyPointerButton.className = 'debug-panel-copy';
-copyPointerButton.textContent = 'Copy pointer position';
-copyPointerButton.addEventListener('click', async (event) => {
+copyPointerButton.textContent = 'Enter copy mode';
+copyPointerButton.addEventListener('click', (event) => {
   event.stopPropagation();
-
-  try {
-    await navigator.clipboard.writeText(formatPointerPosition());
-    copyPointerButton.textContent = 'Copied!';
-  } catch (error) {
-    console.error('Failed to copy pointer position', error);
-    copyPointerButton.textContent = 'Copy failed';
-  }
-
-  window.setTimeout(() => {
-    copyPointerButton.textContent = 'Copy pointer position';
-  }, 1200);
+  isCopyMode = true;
+  copyPointerButton.textContent = 'Click floor to copy';
 });
 debugPanel.appendChild(debugStats);
 debugPanel.appendChild(copyPointerButton);
@@ -123,19 +114,16 @@ export function initDebug() {
   scene.add(hemiLight);
   scene.add(floorMesh);
 
-  window.addEventListener('mousemove', (event) => {
-    // Normalize mouse coordinates from -1 to +1
-    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  renderer.domElement.addEventListener('mousemove', (event) => {
+    updatePointerPosition(event);
+    updateBulbPosition();
+  });
 
-    raycaster.setFromCamera(pointer, camera);
+  renderer.domElement.addEventListener('pointerdown', async (event) => {
+    if (!isCopyMode || event.button !== 0) return;
 
-    const hits = raycaster.intersectObject(floorMesh);
-
-    if (hits.length > 0) pointerOnPlane.copy(hits[0].point)
-    pointerToCamera.subVectors(cameraWorldPos, pointerOnPlane).normalize().multiplyScalar(params.bulbDist);
-    bulbPos.addVectors(pointerOnPlane, pointerToCamera)
-    bulbLight.position.copy(bulbPos)
+    updatePointerPosition(event);
+    await copyPointerPosition();
   });
 }
 
@@ -162,6 +150,38 @@ Pointer position
 x: ${pointerOnPlane.x.toFixed(2)}
 y: ${pointerOnPlane.y.toFixed(2)}
 z: ${pointerOnPlane.z.toFixed(2)}`;
+}
+
+function updatePointerPosition(event: MouseEvent) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  raycaster.setFromCamera(pointer, camera);
+
+  const hits = raycaster.intersectObject(floorMesh);
+  if (hits.length > 0) pointerOnPlane.copy(hits[0].point);
+}
+
+function updateBulbPosition() {
+  pointerToCamera.subVectors(cameraWorldPos, pointerOnPlane).normalize().multiplyScalar(params.bulbDist);
+  bulbPos.addVectors(pointerOnPlane, pointerToCamera);
+  bulbLight.position.copy(bulbPos);
+}
+
+async function copyPointerPosition() {
+  try {
+    await navigator.clipboard.writeText(formatPointerPosition());
+    copyPointerButton.textContent = 'Copied!';
+  } catch (error) {
+    console.error('Failed to copy pointer position', error);
+    copyPointerButton.textContent = 'Copy failed';
+  }
+
+  isCopyMode = false;
+  window.setTimeout(() => {
+    copyPointerButton.textContent = 'Enter copy mode';
+  }, 1200);
 }
 
 function formatPointerPosition() {
