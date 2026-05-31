@@ -1,29 +1,13 @@
-import * as THREE from 'three';
-
 import { DEBUG } from '../../constants';
+import { createHtmlPlane } from '../../utils';
 
-const element = document.createElement('div');
-element.id = "inter"
-element.innerHTML = '<h1>ReLU, explained quickly.</h1>'
-
-const planeGeometry = new THREE.PlaneGeometry(8, 1.5);
-
-const material = new THREE.MeshStandardMaterial({
-  roughness: 0,
-  metalness: 0.5,
-  transparent: true,
-  // alphaTest: 0.01
+export const slide1TitleMesh = createHtmlPlane({
+  html: '<h1>ReLU, explained quickly.</h1>',
+  id: 'inter',
+  width: 8,
+  height: 1.5,
+  debug: DEBUG,
 });
-material.map = new THREE.HTMLTexture(element);
-const wireMaterial = new THREE.MeshBasicMaterial({
-  color: 0x00ff00,
-  wireframe: true,
-})
 
-export const slide1TitleMesh = new THREE.Mesh(planeGeometry, material);
-const wireframeHelper = new THREE.Mesh(planeGeometry, wireMaterial);
-if (DEBUG) slide1TitleMesh.add(wireframeHelper);
-
-
-slide1TitleMesh.position.set(-3.99, 3.85, -0.00);
+slide1TitleMesh.position.set(-3.99, 4, -0.00);
 slide1TitleMesh.position.z = 0.05;

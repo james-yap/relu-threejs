@@ -12,7 +12,53 @@ export type GridHelperConfig = {
   yAxisColor?: THREE.ColorRepresentation;
 };
 
+export type HtmlPlaneConfig = {
+  html: string | HTMLElement;
+  width: number;
+  height: number;
+  id?: string;
+  className?: string;
+  debug?: boolean;
+  wireframeColor?: THREE.ColorRepresentation;
+};
+
+type ThreeWithHtmlTexture = typeof THREE & {
+  HTMLTexture: new (element: HTMLElement) => THREE.Texture;
+};
+
 const isZero = (value: number) => Math.abs(value) < 1e-10;
+
+export const createHtmlPlane = ({
+  html,
+  width,
+  height,
+  id,
+  className,
+  debug = false,
+  wireframeColor = 0x00ff00,
+}: HtmlPlaneConfig) => {
+  const element = typeof html === 'string' ? document.createElement('div') : html;
+
+  if (typeof html === 'string') element.innerHTML = html;
+  if (id) element.id = id;
+  if (className) element.className = className;
+
+  const planeGeometry = new THREE.PlaneGeometry(width, height);
+  const material = new THREE.MeshBasicMaterial({ transparent: true });
+  material.map = new (THREE as ThreeWithHtmlTexture).HTMLTexture(element);
+
+  const mesh = new THREE.Mesh(planeGeometry, material);
+
+  if (debug) {
+    const wireMaterial = new THREE.MeshBasicMaterial({
+      color: wireframeColor,
+      wireframe: true,
+    });
+    mesh.add(new THREE.Mesh(planeGeometry, wireMaterial));
+  }
+
+  return mesh;
+};
 
 export const createGridHelper = ({
   xStart = -5,

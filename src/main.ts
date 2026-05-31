@@ -5,6 +5,7 @@ import './style.css'
 import { setupResize } from './eventListeners';
 import { setupPolyfill } from './setupPolyfill'
 import { debugPanel, initDebug, renderDebug } from './debug'
+import { renderMath } from './mathjax';
 import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
 
@@ -24,7 +25,7 @@ document.getElementById('app')!.appendChild(renderer.domElement)
 initDebug({ scene, camera, renderer, params });
 setupPolyfill(debugPanel);
 setupResize(renderer, camera);
-
+renderMath()
 
 scene.add(hemiLight);
 
@@ -43,3 +44,5 @@ function animate(_time: number) {
 }
 
 initSlide1({ scene, camera, renderer, interactions })
+
+
