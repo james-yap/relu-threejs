@@ -25,7 +25,8 @@ document.getElementById('app')!.appendChild(renderer.domElement)
 initDebug({ scene, camera, renderer, params });
 setupPolyfill(debugPanel);
 setupResize(renderer, camera);
-renderMath()
+
+setInterval(renderMath, 1000);
 
 scene.add(hemiLight);
 

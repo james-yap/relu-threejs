@@ -1,10 +1,10 @@
 import { createHtmlPlane } from '../../utils';
 
 export const slide1Eqn = createHtmlPlane({
-  html: String.raw`$$\text{ReLU}$$`,
+  html: String.raw`$$\text{ReLU}(x) = \text{max}(0, x)$$`,
   id: 'slide1Eqn',
   className: 'blue-text',
-  width: 3,
+  width: 5,
   height: 1,
 });
 

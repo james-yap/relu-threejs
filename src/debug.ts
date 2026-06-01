@@ -11,6 +11,7 @@ import {
   HEMI_IRRADIANCE_OPTIONS,
   type RuntimeParams,
 } from './constants';
+import { renderMath } from './mathjax';
 
 type DebugDependencies = {
   scene: THREE.Scene;
@@ -24,6 +25,7 @@ export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
 const copyPointerButton = document.createElement('button');
 const copyCameraButton = document.createElement('button');
+const renderMathButton = document.createElement('button');
 let isCopyMode = false;
 copyPointerButton.type = 'button';
 copyPointerButton.className = 'debug-panel-copy';
@@ -40,9 +42,17 @@ copyCameraButton.addEventListener('click', async (event) => {
   event.stopPropagation();
   await copyCameraPosition();
 });
+renderMathButton.type = 'button';
+renderMathButton.className = 'debug-panel-copy';
+renderMathButton.textContent = 'Render math';
+renderMathButton.addEventListener('click', async (event) => {
+  event.stopPropagation();
+  await renderMath();
+});
 debugPanel.appendChild(debugStats);
 debugPanel.appendChild(copyPointerButton);
 debugPanel.appendChild(copyCameraButton);
+debugPanel.appendChild(renderMathButton);
 debugPanel.hidden = !DEBUG;
 
 const raycaster = new THREE.Raycaster();
