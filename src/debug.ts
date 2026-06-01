@@ -18,6 +18,8 @@ type DebugDependencies = {
 };
 
 let debugDependencies: DebugDependencies | null = null;
+let debugEnabled = DEBUG;
+let controls: OrbitControls | null = null;
 export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
 const copyPointerButton = document.createElement('button');
@@ -143,14 +145,21 @@ bulbLight.castShadow = true;
 
 
 
+export function setDebugEnabled(enabled: boolean) {
+  debugEnabled = enabled;
+  debugPanel.hidden = !enabled;
+  floorMesh.visible = enabled;
+  floorGridHelper.visible = enabled;
+  if (controls) controls.enabled = enabled;
+  if (!enabled) isCopyMode = false;
+}
+
 export function initDebug(dependencies: DebugDependencies) {
   debugDependencies = dependencies;
 
-  if (!DEBUG) return;
-
   const { camera, renderer, scene, params } = dependencies;
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1;
   controls.maxDistance = 20;
   controls.target.set(params.startingCameraPos[0], params.startingCameraPos[1], 0)
@@ -159,8 +168,10 @@ export function initDebug(dependencies: DebugDependencies) {
   // scene.add(bulbLight);
   scene.add(floorMesh);
   scene.add(floorGridHelper);
+  setDebugEnabled(params.debug);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
+    if (!debugEnabled) return;
     updatePointerPosition(event, renderer, camera);
     updateBulbPosition();
   });
@@ -174,7 +185,7 @@ export function initDebug(dependencies: DebugDependencies) {
 }
 
 export function renderDebug() {
-  if (!DEBUG || debugDependencies === null) return;
+  if (!debugEnabled || debugDependencies === null) return;
 
   const { params } = debugDependencies
 

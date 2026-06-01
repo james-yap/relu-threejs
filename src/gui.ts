@@ -18,11 +18,28 @@ type GuiDependencies = {
 export function initGui({ scene, camera, renderer, params }: GuiDependencies) {
   const gui = new GUI();
 
-  gui.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS);
-  gui.add(params, 'bulbPower', BULB_POWER_OPTIONS);
-  gui.add(params, 'exposure', 0, 1);
-  gui.add(params, 'shadows');
-  gui.add(params, 'bulbDist', 0, 10);
+  const lightingFolder = gui.addFolder('Lighting');
+  lightingFolder.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS).name('Hemi irradiance');
+  lightingFolder.add(params, 'bulbPower', BULB_POWER_OPTIONS).name('Bulb power');
+  lightingFolder.add(params, 'bulbDist', 0, 10).name('Bulb distance');
+
+  const renderFolder = gui.addFolder('Render');
+  renderFolder.add(params, 'exposure', 0, 1).name('Exposure');
+  renderFolder.add(params, 'shadows').name('Shadows');
+
+  const debugFolder = gui.addFolder('Debug');
+  debugFolder
+    .add(params, 'debug')
+    .name('Enabled')
+    .onChange((enabled: boolean) => {
+      const url = new URL(window.location.href);
+      if (enabled) {
+        url.searchParams.set('mode', 'debug');
+      } else {
+        url.searchParams.delete('mode');
+      }
+      window.location.href = url.toString();
+    });
 
   const stepOptions = states.map(({ description }) => description);
   let stepDropdown: { updateDisplay: () => void } | null = null;
