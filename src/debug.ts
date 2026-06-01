@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
@@ -12,6 +13,7 @@ import { renderMath } from './mathjax';
 type DebugDependencies = {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
+  controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   params: RuntimeParams
 };
@@ -247,7 +249,7 @@ async function copyCameraPosition() {
   if (debugDependencies === null) return;
 
   try {
-    await navigator.clipboard.writeText(formatCameraPosition(debugDependencies.camera));
+    await navigator.clipboard.writeText(formatCameraPosition(debugDependencies.camera, debugDependencies.controls));
     copyCameraButton.textContent = 'Copied camera!';
   } catch (error) {
     console.error('Failed to copy camera position', error);
@@ -263,7 +265,12 @@ function formatPointerPosition() {
   return `${pointerOnPlane.x.toFixed(2)}, ${pointerOnPlane.y.toFixed(2)}, ${pointerOnPlane.z.toFixed(2)}`;
 }
 
-function formatCameraPosition(camera: THREE.Camera) {
+function formatCameraPosition(camera: THREE.Camera, controls: OrbitControls) {
   camera.getWorldPosition(cameraWorldPos);
-  return `${cameraWorldPos.x.toFixed(2)}, ${cameraWorldPos.y.toFixed(2)}, ${cameraWorldPos.z.toFixed(2)}`;
+  return `cameraX: ${cameraWorldPos.x.toFixed(2)},
+cameraY: ${cameraWorldPos.y.toFixed(2)},
+cameraZ: ${cameraWorldPos.z.toFixed(2)},
+targetX: ${controls.target.x.toFixed(2)},
+targetY: ${controls.target.y.toFixed(2)},
+targetZ: ${controls.target.z.toFixed(2)},`;
 }

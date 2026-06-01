@@ -40,7 +40,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.minDistance = 1;
 controls.maxDistance = 20;
 
-initDebug({ scene, camera, renderer, params });
+initDebug({ scene, camera, controls, renderer, params });
 initGui({ scene, camera, controls, renderer, params });
 setupPolyfill(debugPanel);
 setupResize(renderer, camera);
