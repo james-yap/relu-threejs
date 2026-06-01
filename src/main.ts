@@ -10,15 +10,9 @@ import { renderMath } from './mathjax';
 import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
 import { initGui } from './gui';
-import { getStartingState, step } from './steps';
+import { getStartingState } from './steps';
 import { initSlide2 } from './slides/2';
 import { initSlide3 } from './slides/3';
-
-declare global {
-  interface Window {
-    step: (targetStep: number) => void;
-  }
-}
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 
@@ -71,6 +65,4 @@ function animate(_time: number) {
 initSlide1({ scene, camera, renderer, interactions })
 initSlide2({ scene })
 initSlide3({ scene })
-
-window.step = (targetStep) => step(targetStep, { camera, controls, renderer, scene })
 

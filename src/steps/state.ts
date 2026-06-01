@@ -1,5 +1,4 @@
-import { updateSlide2Percentage } from "../slides/2/grid";
-import { updateSlide3Percentage } from "../slides/3/group";
+import { globalStepTracker } from "./stepTracker";
 
 type StepStateType = {
   // config
@@ -14,8 +13,7 @@ type StepStateType = {
   targetX: number;
   targetY: number;
   targetZ: number;
-  slide2Percentage: number;
-  slide3Percentage: number;
+  step: number;
 }
 
 // make duration and ease optional
@@ -24,6 +22,7 @@ type StepStateInit =
   Partial<Pick<StepStateType, 'duration' | 'ease'>>;
 
 export class StepState {
+  private static totalSteps = 0;
   private _state: StepStateType;
 
   constructor(state: StepStateInit) {
@@ -32,6 +31,12 @@ export class StepState {
       duration: state.duration ?? 1,
       ease: state.ease ?? 'expo.inOut',
     };
+  }
+
+  static registered(state: Omit<StepStateInit, 'step'>) {
+    const registeredStep = new StepState({ ...state, step: StepState.totalSteps })
+    StepState.totalSteps += 1;
+    return registeredStep;
   }
 
   get description() { return this._state.description; }
@@ -55,18 +60,11 @@ export class StepState {
   get targetZ() { return this._state.targetZ; }
   set targetZ(targetZ: number) { this._state.targetZ = targetZ; }
 
-  get slide2Percentage() { return this._state.slide2Percentage; }
-  set slide2Percentage(slide2Percentage: number) {
-    if (this._state.slide2Percentage === slide2Percentage) return;
-    updateSlide2Percentage(slide2Percentage);
-    this._state.slide2Percentage = slide2Percentage;
-  }
-
-  get slide3Percentage() { return this._state.slide3Percentage; }
-  set slide3Percentage(slide3Percentage: number) {
-    if (this._state.slide3Percentage === slide3Percentage) return;
-    updateSlide3Percentage(slide3Percentage);
-    this._state.slide3Percentage = slide3Percentage;
+  get step() { return this._state.step; }
+  set step(step: number) {
+    if (this._state.step === step) return;
+    globalStepTracker.update(step);
+    this._state.step = step;
   }
 
   toTweenVars() {

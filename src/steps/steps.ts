@@ -1,7 +1,7 @@
 import { StepState } from './state';
 
 export const states = [
-  new StepState({
+  StepState.registered({
     description: "Intro slide",
     cameraX: -4.06,
     cameraY: 2.25,
@@ -9,10 +9,8 @@ export const states = [
     targetX: -4.06,
     targetY: 2.25,
     targetZ: 0,
-    slide2Percentage: 0,
-    slide3Percentage: 0,
   }),
-  new StepState({
+  StepState.registered({
     description: "Linear problem",
     cameraX: 4.09,
     cameraY: 2.25,
@@ -20,10 +18,8 @@ export const states = [
     targetX: 4.09,
     targetY: 2.25,
     targetZ: 0,
-    slide2Percentage: 0,
-    slide3Percentage: 0,
   }),
-  new StepState({
+  StepState.registered({
     description: "Linear problem fit",
     cameraX: 4.09,
     cameraY: 2.25,
@@ -31,10 +27,8 @@ export const states = [
     targetX: 4.09,
     targetY: 2.25,
     targetZ: 0,
-    slide2Percentage: 1,
-    slide3Percentage: 0,
   }),
-  new StepState({
+  StepState.registered({
     description: "Linear Formulation",
     cameraX: 12.07,
     cameraY: 2.25,
@@ -42,10 +36,8 @@ export const states = [
     targetX: 12.07,
     targetY: 2.25,
     targetZ: 0.00,
-    slide2Percentage: 1,
-    slide3Percentage: 0,
   }),
-  new StepState({
+  StepState.registered({
     description: "Linear Neuron",
     cameraX: 12.07,
     cameraY: 2.25,
@@ -53,7 +45,5 @@ export const states = [
     targetX: 12.07,
     targetY: 2.25,
     targetZ: 0.00,
-    slide2Percentage: 1,
-    slide3Percentage: 1,
   })
 ]

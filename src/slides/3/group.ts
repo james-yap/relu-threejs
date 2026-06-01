@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { globalStepTracker } from '../../steps/stepTracker';
+
 export const slide3Group = new THREE.Group();
 
 const createCurveGeometry = (percentage: number) => {
@@ -23,16 +25,13 @@ const createCurveGeometry = (percentage: number) => {
 };
 
 
-const urlParams = new URLSearchParams(window.location.search);
-const defaultPercentage = urlParams.get('step') === '4' ? 1 : 0;
-
 const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
-const curve = new THREE.Mesh(createCurveGeometry(defaultPercentage), curveMaterial);
+const curve = new THREE.Mesh(new THREE.BufferGeometry(), curveMaterial);
 
-export function updateSlide3Percentage(percentage: number) {
+globalStepTracker.registerUpdator(4, (p) => {
   curve.geometry.dispose();
-  curve.geometry = createCurveGeometry(percentage);
-}
+  curve.geometry = createCurveGeometry(p);
+})
 
 slide3Group.position.set(12.05, 2.25, 0.00);
 slide3Group.add(curve)
