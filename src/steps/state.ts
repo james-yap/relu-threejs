@@ -1,24 +1,35 @@
-export class StepState {
-  private _state: {
-    description: string;
-    cameraX: number;
-    cameraY: number;
-    cameraZ: number;
-    targetX: number;
-    targetY: number;
-    targetZ: number;
-  };
+import { updateSlide2Percentage } from "../slides/2/grid";
 
-  constructor(state: {
-    description: string;
-    cameraX: number;
-    cameraY: number;
-    cameraZ: number;
-    targetX: number;
-    targetY: number;
-    targetZ: number;
-  }) {
-    this._state = { ...state };
+type StepStateType = {
+  // config
+  description: string;
+  duration: number;
+  ease: string;
+
+  // state
+  cameraX: number;
+  cameraY: number;
+  cameraZ: number;
+  targetX: number;
+  targetY: number;
+  targetZ: number;
+  slide2Percentage: number;
+}
+
+// make duration and ease optional
+type StepStateInit =
+  Omit<StepStateType, 'duration' | 'ease'> &
+  Partial<Pick<StepStateType, 'duration' | 'ease'>>;
+
+export class StepState {
+  private _state: StepStateType;
+
+  constructor(state: StepStateInit) {
+    this._state = {
+      ...state,
+      duration: state.duration ?? 1,
+      ease: state.ease ?? 'expo.inOut',
+    };
   }
 
   get description() { return this._state.description; }
@@ -41,6 +52,19 @@ export class StepState {
 
   get targetZ() { return this._state.targetZ; }
   set targetZ(targetZ: number) { this._state.targetZ = targetZ; }
+
+  get slide2Percentage() { return this._state.slide2Percentage; }
+  set slide2Percentage(slide2Percentage: number) {
+    if (this._state.slide2Percentage === slide2Percentage) return;
+    updateSlide2Percentage(slide2Percentage);
+    this._state.slide2Percentage = slide2Percentage;
+  }
+
+  toTweenVars() {
+    return {
+      ...this._state,
+    }
+  }
 
   clone() {
     return new StepState(this._state);

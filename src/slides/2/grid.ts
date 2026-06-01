@@ -26,3 +26,31 @@ const scatterPoints = x.map((xVal, i) => {
 
 slide2Group.add(...scatterPoints)
 slide2Group.position.set(...pos)
+
+
+const createCurveGeometry = (percentage: number) => {
+  const curveLength = 3 * percentage;
+  const curvePoints: THREE.Vector3[] = [
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(curveLength, curveLength, 0)
+  ];
+
+  const curvePath = new THREE.CatmullRomCurve3(curvePoints);
+  return new THREE.TubeGeometry(
+    curvePath,
+    100, // tubular segments
+    0.05, // thickness / radius
+    8, // radial segments
+    false
+  );
+};
+
+const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
+const curve = new THREE.Mesh(createCurveGeometry(0), curveMaterial);
+
+export function updateSlide2Percentage(percentage: number) {
+  curve.geometry.dispose();
+  curve.geometry = createCurveGeometry(percentage);
+}
+
+slide2Group.add(curve)

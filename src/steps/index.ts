@@ -30,14 +30,7 @@ export function step(targetStep: number, deps: StepDependencies) {
   activeTween?.kill();
 
   activeTween = gsap.to(state, {
-    cameraX: targetState.cameraX,
-    cameraY: targetState.cameraY,
-    cameraZ: targetState.cameraZ,
-    targetX: targetState.targetX,
-    targetY: targetState.targetY,
-    targetZ: targetState.targetZ,
-    duration: 1,
-    ease: 'expo.inOut',
+    ...targetState.toTweenVars(),
     onUpdate: () => {
       camera.position.set(state.cameraX, state.cameraY, state.cameraZ);
       controls.target.set(state.targetX, state.targetY, state.targetZ);
