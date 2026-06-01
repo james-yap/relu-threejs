@@ -10,6 +10,11 @@ import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
 import { step } from './steps';
 
+declare global {
+  interface Window {
+    step: (targetStep: number) => void;
+  }
+}
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 

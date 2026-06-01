@@ -12,6 +12,7 @@ import {
   type RuntimeParams,
 } from './constants';
 import { renderMath } from './mathjax';
+import { getCurrentStep, states, step } from './steps';
 
 type DebugDependencies = {
   scene: THREE.Scene;
@@ -159,6 +160,31 @@ export function initDebug(dependencies: DebugDependencies) {
   gui.add(params, 'exposure', 0, 1);
   gui.add(params, 'shadows');
   gui.add(params, 'bulbDist', 0, 10);
+
+  const stepOptions = states.map(({ description }) => description);
+  let stepDropdown: { updateDisplay: () => void } | null = null;
+  const navigateToStep = (targetStep: number, updateDropdown = true) => {
+    const clampedStep = THREE.MathUtils.clamp(targetStep, 0, states.length - 1);
+    step(clampedStep, { scene, camera, renderer });
+    stepControls.currentStep = stepOptions[clampedStep];
+    if (updateDropdown) stepDropdown?.updateDisplay();
+  };
+  const stepControls = {
+    currentStep: stepOptions[getCurrentStep()],
+    previous: () => navigateToStep(getCurrentStep() - 1),
+    next: () => navigateToStep(getCurrentStep() + 1),
+  };
+  const stepFolder = gui.addFolder('Steps');
+  stepDropdown = stepFolder
+    .add(stepControls, 'currentStep', stepOptions)
+    .name('State')
+    .onChange((description: string) => {
+      const targetStep = stepOptions.indexOf(description);
+      if (targetStep !== -1) navigateToStep(targetStep, false);
+    });
+  stepFolder.add(stepControls, 'previous').name('← Previous');
+  stepFolder.add(stepControls, 'next').name('Next →');
+
   gui.open();
 
   const controls = new OrbitControls(camera, renderer.domElement);
