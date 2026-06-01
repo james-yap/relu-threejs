@@ -8,6 +8,7 @@ import { debugPanel, initDebug, renderDebug } from './debug'
 import { renderMath } from './mathjax';
 import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
+import { step } from './steps';
 
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
@@ -46,4 +47,5 @@ function animate(_time: number) {
 
 initSlide1({ scene, camera, renderer, interactions })
 
+window.step = (targetStep) => step(targetStep, { camera, renderer, scene })
 

@@ -10,7 +10,6 @@ export const renderMath = async () => {
   if (window.MathJax && window.MathJax.typesetPromise) {
     try {
       await window.MathJax.typesetPromise();
-      console.log('Math rendered successfully!');
     } catch (err) {
       console.error('MathJax rendering failed:', err);
     }
