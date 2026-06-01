@@ -9,6 +9,7 @@ import {
   type RuntimeParams,
 } from './constants';
 import { renderMath } from './mathjax';
+import { getStartingState, states } from './steps';
 
 type DebugDependencies = {
   scene: THREE.Scene;
@@ -159,10 +160,12 @@ export function initDebug(dependencies: DebugDependencies) {
 
   const { camera, renderer, scene, params } = dependencies;
 
+  const startingState = getStartingState();
+
   controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1;
   controls.maxDistance = 20;
-  controls.target.set(params.startingCameraPos[0], params.startingCameraPos[1], 0)
+  controls.target.set(startingState.cameraX, startingState.cameraY, 0)
   controls.update()
 
   // scene.add(bulbLight);

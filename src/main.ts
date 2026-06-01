@@ -9,7 +9,7 @@ import { renderMath } from './mathjax';
 import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
 import { initGui } from './gui';
-import { step } from './steps';
+import { getStartingState, step } from './steps';
 
 declare global {
   interface Window {
@@ -38,8 +38,9 @@ setInterval(renderMath, 1000);
 
 scene.add(hemiLight);
 
-camera.position.set(...params.startingCameraPos)
-camera.lookAt(...params.startingCameraPos)
+const startingState = getStartingState();
+camera.position.set(startingState.cameraX, startingState.cameraY, startingState.cameraZ)
+camera.lookAt(startingState.cameraX, startingState.cameraY, 0)
 
 interactions.connect(renderer, camera);
 

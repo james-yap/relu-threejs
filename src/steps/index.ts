@@ -18,9 +18,9 @@ export type StepState = {
 export const states: StepState[] = [
   {
     description: "Intro slide",
-    cameraX: DEFAULT_RUNTIME_PARAMS.startingCameraPos[0],
-    cameraY: DEFAULT_RUNTIME_PARAMS.startingCameraPos[1],
-    cameraZ: DEFAULT_RUNTIME_PARAMS.startingCameraPos[2]
+    cameraX: -4.06,
+    cameraY: 2.25,
+    cameraZ: 3.00
   },
   {
     description: "Linear problem",
@@ -33,6 +33,10 @@ export const states: StepState[] = [
 const state = structuredClone(states[0]);
 let currentStep = 0;
 let activeTween: gsap.core.Tween | null = null;
+
+export function getStartingState() {
+  return states[DEFAULT_RUNTIME_PARAMS.startingStep];
+}
 
 export function getCurrentStep() {
   return currentStep;
