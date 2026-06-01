@@ -45,8 +45,11 @@ const createCurveGeometry = (percentage: number) => {
   );
 };
 
+const urlParams = new URLSearchParams(window.location.search);
+const defaultPercentage = urlParams.get('step') === '2' ? 1 : 0;
+
 const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
-const curve = new THREE.Mesh(createCurveGeometry(0), curveMaterial);
+const curve = new THREE.Mesh(createCurveGeometry(defaultPercentage), curveMaterial);
 
 export function updateSlide2Percentage(percentage: number) {
   curve.geometry.dispose();
