@@ -8,12 +8,3 @@ export type StepDependencies = {
   renderer: THREE.WebGLRenderer;
 };
 
-export type StepState = {
-  description: string;
-  cameraX: number,
-  cameraY: number,
-  cameraZ: number,
-  targetX: number,
-  targetY: number,
-  targetZ: number,
-}

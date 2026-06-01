@@ -1,14 +1,14 @@
 import gsap from "gsap"
 
 import { DEFAULT_RUNTIME_PARAMS } from '../constants';
-import { states } from './state';
+import { states } from './steps';
 import type { StepDependencies } from './types';
 import { clampStep, getUrlStep, writeUrlStep } from './utils';
 
 export { states };
 
 let currentStep = getUrlStep(states.length) ?? clampStep(DEFAULT_RUNTIME_PARAMS.startingStep, states.length);
-const state = structuredClone(states[currentStep]);
+const state = states[currentStep].clone();
 let activeTween: gsap.core.Tween | null = null;
 
 export function getStartingState() {
