@@ -30,12 +30,35 @@ export const states: StepState[] = [
   }
 ]
 
-const state = structuredClone(states[0]);
-let currentStep = 0;
+const STEP_SEARCH_PARAM = 'step';
+
+function clampStep(targetStep: number) {
+  return THREE.MathUtils.clamp(Math.trunc(targetStep), 0, states.length - 1);
+}
+
+function getUrlStep() {
+  const stepParam = new URLSearchParams(window.location.search).get(STEP_SEARCH_PARAM);
+  if (stepParam === null) return null;
+
+  const parsedStep = Number(stepParam);
+  return Number.isInteger(parsedStep) ? clampStep(parsedStep) : null;
+}
+
+function writeUrlStep(targetStep: number) {
+  const url = new URL(window.location.href);
+  const nextStep = String(targetStep);
+  if (url.searchParams.get(STEP_SEARCH_PARAM) === nextStep) return;
+
+  url.searchParams.set(STEP_SEARCH_PARAM, nextStep);
+  window.history.replaceState(window.history.state, '', url);
+}
+
+let currentStep = getUrlStep() ?? clampStep(DEFAULT_RUNTIME_PARAMS.startingStep);
+const state = structuredClone(states[currentStep]);
 let activeTween: gsap.core.Tween | null = null;
 
 export function getStartingState() {
-  return states[DEFAULT_RUNTIME_PARAMS.startingStep];
+  return states[currentStep];
 }
 
 export function getCurrentStep() {
@@ -43,11 +66,13 @@ export function getCurrentStep() {
 }
 
 export function step(targetStep: number, deps: StepDependencies) {
-  const targetState = states[targetStep];
+  const nextStep = clampStep(targetStep);
+  const targetState = states[nextStep];
   if (!targetState) return;
 
   const { camera } = deps
-  currentStep = targetStep;
+  currentStep = nextStep;
+  writeUrlStep(nextStep);
   activeTween?.kill();
 
   activeTween = gsap.to(state, {

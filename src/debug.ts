@@ -9,7 +9,7 @@ import {
   type RuntimeParams,
 } from './constants';
 import { renderMath } from './mathjax';
-import { getStartingState, states } from './steps';
+import { getStartingState } from './steps';
 
 type DebugDependencies = {
   scene: THREE.Scene;

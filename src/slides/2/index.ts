@@ -9,9 +9,4 @@ type Slide1Dependencies = {
   interactions: InteractionManager
 };
 
-let deps: Slide1Dependencies | null = null;
-
-export function initSlide1(interactionDependencies: Slide1Dependencies) {
-  deps = interactionDependencies;
-  const { scene, interactions } = deps;
-}
+export function initSlide1(_interactionDependencies: Slide1Dependencies) {}
