@@ -16,6 +16,6 @@ export const renderMath = async () => {
     }
   } else {
     // Retry if MathJax hasn't finished loading from the CDN
-    setTimeout(renderMath, 100);
+    setTimeout(renderMath, 500);
   }
 };

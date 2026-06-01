@@ -3,6 +3,7 @@ import { InteractionManager } from 'three/addons/interaction/InteractionManager.
 
 import { slide1TitleMesh } from './title';
 import { slide1GridGroup } from './relu';
+import { slide1Eqn } from './eqn';
 
 type Slide1Dependencies = {
   scene: THREE.Scene;
@@ -21,4 +22,5 @@ export function initSlide1(interactionDependencies: Slide1Dependencies) {
   interactions.add(slide1TitleMesh);
 
   scene.add(slide1GridGroup)
+  scene.add(slide1Eqn)
 }

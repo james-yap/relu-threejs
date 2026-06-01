@@ -3,11 +3,11 @@ body {
   overflow: hidden;
 }
 
-#inter {
+.blue-text {
   padding: 30px;
   /* background: #aaa; */
   /* color: #000; */
-  color: blue;
+  color: #58C4DD;
   font-family: sans-serif;
   font-size: 30px;
   line-height: 1.5;

@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { DEBUG } from './constants';
+
 export type GridHelperConfig = {
   xStart?: number;
   xEnd?: number;
@@ -18,6 +20,7 @@ export type HtmlPlaneConfig = {
   height: number;
   id?: string;
   className?: string;
+  pixelsPerUnit?: number;
   debug?: boolean;
   wireframeColor?: THREE.ColorRepresentation;
 };
@@ -34,18 +37,34 @@ export const createHtmlPlane = ({
   height,
   id,
   className,
-  debug = false,
+  pixelsPerUnit = 100,
+  debug = DEBUG,
   wireframeColor = 0x00ff00,
 }: HtmlPlaneConfig) => {
-  const element = typeof html === 'string' ? document.createElement('div') : html;
+  const contentElement = typeof html === 'string' ? document.createElement('div') : html;
+  const textureElement = document.createElement('div');
 
-  if (typeof html === 'string') element.innerHTML = html;
-  if (id) element.id = id;
-  if (className) element.className = className;
+  if (typeof html === 'string') contentElement.innerHTML = html;
+  if (id) contentElement.id = id;
+  if (className) contentElement.className = className;
+
+  const textureWidth = width * pixelsPerUnit;
+  const textureHeight = height * pixelsPerUnit;
+
+  contentElement.style.width = `${textureWidth}px`;
+  contentElement.style.height = `${textureHeight}px`;
+  contentElement.style.boxSizing = 'border-box';
+
+  textureElement.style.width = `${textureWidth}px`;
+  textureElement.style.height = `${textureHeight}px`;
+  textureElement.style.display = 'grid';
+  textureElement.style.placeItems = 'center';
+  textureElement.style.overflow = 'hidden';
+  textureElement.appendChild(contentElement);
 
   const planeGeometry = new THREE.PlaneGeometry(width, height);
   const material = new THREE.MeshBasicMaterial({ transparent: true });
-  material.map = new (THREE as ThreeWithHtmlTexture).HTMLTexture(element);
+  material.map = new (THREE as ThreeWithHtmlTexture).HTMLTexture(textureElement);
 
   const mesh = new THREE.Mesh(planeGeometry, material);
 
