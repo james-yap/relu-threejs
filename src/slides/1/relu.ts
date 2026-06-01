@@ -46,8 +46,8 @@ slide1GridGroup.add(sphere)
 
 gsap.to(curveState, {
   xBound: 3,
-  duration: 3,
-  ease: 'bounce',
+  duration: 2,
+  ease: 'sine.inOut',
   yoyo: true,
   repeat: -1,
   onUpdate: () => {

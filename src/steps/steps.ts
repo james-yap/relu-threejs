@@ -10,6 +10,7 @@ export const states = [
     targetY: 2.25,
     targetZ: 0,
     slide2Percentage: 0,
+    slide3Percentage: 0,
   }),
   new StepState({
     description: "Linear problem",
@@ -20,6 +21,7 @@ export const states = [
     targetY: 2.25,
     targetZ: 0,
     slide2Percentage: 0,
+    slide3Percentage: 0,
   }),
   new StepState({
     description: "Linear problem fit",
@@ -30,5 +32,28 @@ export const states = [
     targetY: 2.25,
     targetZ: 0,
     slide2Percentage: 1,
+    slide3Percentage: 0,
+  }),
+  new StepState({
+    description: "Linear Formulation",
+    cameraX: 12.07,
+    cameraY: 2.25,
+    cameraZ: 3.00,
+    targetX: 12.07,
+    targetY: 2.25,
+    targetZ: 0.00,
+    slide2Percentage: 1,
+    slide3Percentage: 0,
+  }),
+  new StepState({
+    description: "Linear Neuron",
+    cameraX: 12.07,
+    cameraY: 2.25,
+    cameraZ: 3.00,
+    targetX: 12.07,
+    targetY: 2.25,
+    targetZ: 0.00,
+    slide2Percentage: 1,
+    slide3Percentage: 1,
   })
 ]

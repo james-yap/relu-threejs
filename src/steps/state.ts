@@ -1,4 +1,5 @@
 import { updateSlide2Percentage } from "../slides/2/grid";
+import { updateSlide3Percentage } from "../slides/3/group";
 
 type StepStateType = {
   // config
@@ -14,6 +15,7 @@ type StepStateType = {
   targetY: number;
   targetZ: number;
   slide2Percentage: number;
+  slide3Percentage: number;
 }
 
 // make duration and ease optional
@@ -58,6 +60,13 @@ export class StepState {
     if (this._state.slide2Percentage === slide2Percentage) return;
     updateSlide2Percentage(slide2Percentage);
     this._state.slide2Percentage = slide2Percentage;
+  }
+
+  get slide3Percentage() { return this._state.slide3Percentage; }
+  set slide3Percentage(slide3Percentage: number) {
+    if (this._state.slide3Percentage === slide3Percentage) return;
+    updateSlide3Percentage(slide3Percentage);
+    this._state.slide3Percentage = slide3Percentage;
   }
 
   toTweenVars() {
