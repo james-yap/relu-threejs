@@ -8,6 +8,7 @@ import { debugPanel, initDebug, renderDebug } from './debug'
 import { renderMath } from './mathjax';
 import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
+import { initGui } from './gui';
 import { step } from './steps';
 
 declare global {
@@ -29,6 +30,7 @@ renderer.setAnimationLoop(animate);
 document.getElementById('app')!.appendChild(renderer.domElement)
 
 initDebug({ scene, camera, renderer, params });
+initGui({ scene, camera, renderer, params });
 setupPolyfill(debugPanel);
 setupResize(renderer, camera);
 
@@ -44,6 +46,8 @@ interactions.connect(renderer, camera);
 
 function animate(_time: number) {
   hemiLight.intensity = HEMI_LUMINOUS_IRRADIANCES[params.hemiIrradiance];
+  renderer.toneMappingExposure = params.exposure;
+  renderer.shadowMap.enabled = params.shadows;
 
   renderDebug();
   interactions.update();

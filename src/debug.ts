@@ -3,16 +3,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import {
   BULB_LUMINOUS_POWERS,
-  BULB_POWER_OPTIONS,
   DEBUG,
-  HEMI_IRRADIANCE_OPTIONS,
   type RuntimeParams,
 } from './constants';
 import { renderMath } from './mathjax';
-import { getCurrentStep, states, step } from './steps';
 
 type DebugDependencies = {
   scene: THREE.Scene;
@@ -153,39 +149,6 @@ export function initDebug(dependencies: DebugDependencies) {
   if (!DEBUG) return;
 
   const { camera, renderer, scene, params } = dependencies;
-
-  const gui = new GUI();
-  gui.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS);
-  gui.add(params, 'bulbPower', BULB_POWER_OPTIONS);
-  gui.add(params, 'exposure', 0, 1);
-  gui.add(params, 'shadows');
-  gui.add(params, 'bulbDist', 0, 10);
-
-  const stepOptions = states.map(({ description }) => description);
-  let stepDropdown: { updateDisplay: () => void } | null = null;
-  const navigateToStep = (targetStep: number, updateDropdown = true) => {
-    const clampedStep = THREE.MathUtils.clamp(targetStep, 0, states.length - 1);
-    step(clampedStep, { scene, camera, renderer });
-    stepControls.currentStep = stepOptions[clampedStep];
-    if (updateDropdown) stepDropdown?.updateDisplay();
-  };
-  const stepControls = {
-    currentStep: stepOptions[getCurrentStep()],
-    previous: () => navigateToStep(getCurrentStep() - 1),
-    next: () => navigateToStep(getCurrentStep() + 1),
-  };
-  const stepFolder = gui.addFolder('Steps');
-  stepDropdown = stepFolder
-    .add(stepControls, 'currentStep', stepOptions)
-    .name('State')
-    .onChange((description: string) => {
-      const targetStep = stepOptions.indexOf(description);
-      if (targetStep !== -1) navigateToStep(targetStep, false);
-    });
-  stepFolder.add(stepControls, 'previous').name('← Previous');
-  stepFolder.add(stepControls, 'next').name('Next →');
-
-  gui.open();
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.minDistance = 1;
