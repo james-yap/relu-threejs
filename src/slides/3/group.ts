@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 
 import { globalStepTracker } from '../../steps/stepTracker';
+import { createHtmlPlane } from '../../utils';
 
 export const slide3Group = new THREE.Group();
 
 const createCurveGeometry = (percentage: number) => {
-  if (percentage <= 0) return new THREE.BufferGeometry();
-
   const radians = 2.2 * Math.PI * percentage;
   const curvePoints: THREE.Vector3[] = [];
 
@@ -28,10 +27,25 @@ const createCurveGeometry = (percentage: number) => {
 const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
 const curve = new THREE.Mesh(new THREE.BufferGeometry(), curveMaterial);
 
+
+const neuronText = createHtmlPlane({
+  html: String.raw`$$ \sum + b $$`,
+  id: 'slide3NeuronText',
+  className: 'blue-text',
+  width: 8,
+  height: 1.5,
+});
+
+
 globalStepTracker.registerUpdator(4, (p) => {
   curve.geometry.dispose();
-  curve.geometry = createCurveGeometry(p);
+  if (p <= 0.1) curve.geometry = new THREE.BufferGeometry()
+  else curve.geometry = createCurveGeometry(p);
+
+  // neuronText.material.transparent = true;
+  neuronText.material.opacity = p;
 })
 
 slide3Group.position.set(12.05, 2.25, 0.00);
 slide3Group.add(curve)
+slide3Group.add(neuronText)
