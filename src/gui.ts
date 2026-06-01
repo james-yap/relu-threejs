@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import {
   BULB_POWER_OPTIONS,
@@ -11,11 +12,12 @@ import { getCurrentStep, states, step } from './steps';
 type GuiDependencies = {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
+  controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   params: RuntimeParams;
 };
 
-export function initGui({ scene, camera, renderer, params }: GuiDependencies) {
+export function initGui({ scene, camera, controls, renderer, params }: GuiDependencies) {
   const gui = new GUI();
 
   const lightingFolder = gui.addFolder('Lighting');
@@ -51,7 +53,7 @@ export function initGui({ scene, camera, renderer, params }: GuiDependencies) {
 
   const navigateToStep = (targetStep: number, updateDropdown = true) => {
     const clampedStep = THREE.MathUtils.clamp(targetStep, 0, states.length - 1);
-    step(clampedStep, { scene, camera, renderer });
+    step(clampedStep, { scene, camera, controls, renderer });
     stepControls.currentStep = stepOptions[clampedStep];
     if (updateDropdown) stepDropdown?.updateDisplay();
   };

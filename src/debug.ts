@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js';
 import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
@@ -9,7 +8,6 @@ import {
   type RuntimeParams,
 } from './constants';
 import { renderMath } from './mathjax';
-import { getStartingState } from './steps';
 
 type DebugDependencies = {
   scene: THREE.Scene;
@@ -20,7 +18,6 @@ type DebugDependencies = {
 
 let debugDependencies: DebugDependencies | null = null;
 let debugEnabled = DEBUG;
-let controls: OrbitControls | null = null;
 export const debugPanel = document.getElementById('debug-panel')!;
 const debugStats = document.createElement('div');
 const copyPointerButton = document.createElement('button');
@@ -151,7 +148,7 @@ export function setDebugEnabled(enabled: boolean) {
   debugPanel.hidden = !enabled;
   floorMesh.visible = enabled;
   floorGridHelper.visible = enabled;
-  if (controls) controls.enabled = enabled;
+  // if (controls) controls.enabled = enabled;
   if (!enabled) isCopyMode = false;
 }
 
@@ -160,13 +157,6 @@ export function initDebug(dependencies: DebugDependencies) {
 
   const { camera, renderer, scene, params } = dependencies;
 
-  const startingState = getStartingState();
-
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.minDistance = 1;
-  controls.maxDistance = 20;
-  controls.target.set(startingState.cameraX, startingState.cameraY, 0)
-  controls.update()
 
   // scene.add(bulbLight);
   scene.add(floorMesh);

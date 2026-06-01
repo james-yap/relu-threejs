@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
+import { slide2Group } from './grid';
 
-
-type Slide1Dependencies = {
+type Slide2Dependencies = {
   scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
-  renderer: THREE.WebGLRenderer;
-  interactions: InteractionManager
 };
 
-export function initSlide1(_interactionDependencies: Slide1Dependencies) {}
+export function initSlide2(deps: Slide2Dependencies) {
+  const { scene } = deps;
+
+  scene.add(slide2Group);
+}

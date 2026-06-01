@@ -1,10 +1,13 @@
 import * as THREE from 'three';
 import gsap from "gsap"
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
 import { DEFAULT_RUNTIME_PARAMS } from '../constants';
 
 export type StepDependencies = {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
+  controls: OrbitControls,
   renderer: THREE.WebGLRenderer;
 };
 
@@ -13,6 +16,9 @@ export type StepState = {
   cameraX: number,
   cameraY: number,
   cameraZ: number,
+  targetX: number,
+  targetY: number,
+  targetZ: number,
 }
 
 export const states: StepState[] = [
@@ -20,13 +26,19 @@ export const states: StepState[] = [
     description: "Intro slide",
     cameraX: -4.06,
     cameraY: 2.25,
-    cameraZ: 3.00
+    cameraZ: 3.00,
+    targetX: -4.06,
+    targetY: 2.25,
+    targetZ: 0,
   },
   {
     description: "Linear problem",
     cameraX: 4.09,
     cameraY: 2.25,
     cameraZ: 3.00,
+    targetX: 4.09,
+    targetY: 2.25,
+    targetZ: 0,
   }
 ]
 
@@ -70,7 +82,7 @@ export function step(targetStep: number, deps: StepDependencies) {
   const targetState = states[nextStep];
   if (!targetState) return;
 
-  const { camera } = deps
+  const { camera, controls } = deps
   currentStep = nextStep;
   writeUrlStep(nextStep);
   activeTween?.kill();
@@ -79,10 +91,16 @@ export function step(targetStep: number, deps: StepDependencies) {
     cameraX: targetState.cameraX,
     cameraY: targetState.cameraY,
     cameraZ: targetState.cameraZ,
+    targetX: targetState.targetX,
+    targetY: targetState.targetY,
+    targetZ: targetState.targetZ,
     duration: 1,
     ease: 'expo.inOut',
     onUpdate: () => {
-      camera.position.set(state.cameraX, state.cameraY, state.cameraZ)
+      camera.position.set(state.cameraX, state.cameraY, state.cameraZ);
+      controls.target.set(state.targetX, state.targetY, state.targetZ);
+      controls.update();
+      camera.lookAt(state.targetX, state.targetY, state.targetZ);
     }
   });
 }
