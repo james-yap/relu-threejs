@@ -1,20 +1,35 @@
-// Tell TypeScript that MathJax exists on the window object
 declare global {
   interface Window {
     MathJax: any;
   }
 }
 
-// Ensure this file is treated as a module
+const waitForMathJax = async (attempt = 0): Promise<any | null> => {
+  if (window.MathJax?.typesetPromise) return window.MathJax;
+  if (attempt >= 100) return null;
+
+  await new Promise((resolve) => window.setTimeout(resolve, 50));
+  return waitForMathJax(attempt + 1);
+};
+
+export const renderMathElement = async (element: HTMLElement) => {
+  const mathJax = await waitForMathJax();
+  if (!mathJax) return;
+
+  try {
+    await mathJax.typesetPromise([element]);
+  } catch (err) {
+    console.error('MathJax rendering failed:', err);
+  }
+};
+
 export const renderMath = async () => {
-  if (window.MathJax && window.MathJax.typesetPromise) {
-    try {
-      await window.MathJax.typesetPromise();
-    } catch (err) {
-      console.error('MathJax rendering failed:', err);
-    }
-  } else {
-    // Retry if MathJax hasn't finished loading from the CDN
-    // setTimeout(renderMath, 100);
+  const mathJax = await waitForMathJax();
+  if (!mathJax) return;
+
+  try {
+    await mathJax.typesetPromise();
+  } catch (err) {
+    console.error('MathJax rendering failed:', err);
   }
 };

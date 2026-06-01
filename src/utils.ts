@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { DEBUG } from './constants';
+import { renderMathElement } from './mathjax';
 
 export type GridHelperConfig = {
   xStart?: number;
@@ -64,7 +65,13 @@ export const createHtmlPlane = ({
 
   const planeGeometry = new THREE.PlaneGeometry(width, height);
   const material = new THREE.MeshBasicMaterial({ transparent: true });
-  material.map = new (THREE as ThreeWithHtmlTexture).HTMLTexture(textureElement);
+  const texture = new (THREE as ThreeWithHtmlTexture).HTMLTexture(textureElement);
+  material.map = texture;
+
+  void renderMathElement(textureElement).then(() => {
+    texture.needsUpdate = true;
+    (textureElement.parentElement as (HTMLElement & { requestPaint?: () => void }) | null)?.requestPaint?.();
+  });
 
   const mesh = new THREE.Mesh(planeGeometry, material);
 

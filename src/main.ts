@@ -6,7 +6,6 @@ import './style.css'
 import { setupResize } from './eventListeners';
 import { setupPolyfill } from './setupPolyfill'
 import { debugPanel, initDebug, renderDebug } from './debug'
-import { renderMath } from './mathjax';
 import { initSlide1 } from './slides/1';
 import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
 import { initGui } from './gui';
@@ -39,8 +38,6 @@ initDebug({ scene, camera, controls, renderer, params });
 initGui({ scene, camera, controls, renderer, params });
 setupPolyfill(debugPanel);
 setupResize(renderer, camera);
-
-setInterval(renderMath, 1000);
 
 scene.add(hemiLight);
 
