@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubeGeometry: rings → quads → triangles</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #050505;
+      color: #dff8ff;
+      font-family: system-ui, sans-serif;
+    }
+
+    #info {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      max-width: 380px;
+      padding: 14px 16px;
+      border: 1px solid rgb(88 196 221 / 45%);
+      border-radius: 10px;
+      background: rgb(0 0 0 / 72%);
+      line-height: 1.4;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #58c4dd;
+    }
+
+    p {
+      margin: 6px 0;
+      font-size: 14px;
+    }
+
+    .pink { color: #ff4d6d; }
+    .blue { color: #58c4dd; }
+    .yellow { color: #ffd166; }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <h1>TubeGeometry = rings connected by quads</h1>
+    <p><span class="pink">Pink dots</span> are vertices on two circular cross-section rings.</p>
+    <p><span class="blue">Blue lines</span> connect matching vertices between rings.</p>
+    <p>The highlighted side is one <span class="yellow">quad</span>, split into two triangles by the diagonal.</p>
+    <p><code>indicesPerSegment = radialSegments * 2 triangles * 3 indices</code></p>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(4, 3, 5);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const radialSegments = 8;
+    const radius = 1;
+    const xA = -1.25;
+    const xB = 1.25;
+
+    const ringA = [];
+    const ringB = [];
+
+    for (let i = 0; i < radialSegments; i++) {
+      const angle = (i / radialSegments) * Math.PI * 2;
+      const y = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+
+      ringA.push(new THREE.Vector3(xA, y, z));
+      ringB.push(new THREE.Vector3(xB, y, z));
+    }
+
+    const makeLine = (points, color, opacity = 1) => {
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color, transparent: opacity < 1, opacity });
+      return new THREE.Line(geometry, material);
+    };
+
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xff4d6d });
+    const dotGeometry = new THREE.SphereGeometry(0.045, 16, 8);
+
+    for (let i = 0; i < radialSegments; i++) {
+      const next = (i + 1) % radialSegments;
+
+      group.add(makeLine([ringA[i], ringA[next]], 0xff4d6d));
+      group.add(makeLine([ringB[i], ringB[next]], 0xff4d6d));
+      group.add(makeLine([ringA[i], ringB[i]], 0x58c4dd));
+
+      const dotA = new THREE.Mesh(dotGeometry, ringMaterial);
+      dotA.position.copy(ringA[i]);
+      group.add(dotA);
+
+      const dotB = new THREE.Mesh(dotGeometry, ringMaterial);
+      dotB.position.copy(ringB[i]);
+      group.add(dotB);
+    }
+
+    // Highlight one side face: four vertices form a quad, but WebGL draws it as two triangles.
+    const i = 1;
+    const j = (i + 1) % radialSegments;
+    const A0 = ringA[i];
+    const A1 = ringA[j];
+    const B0 = ringB[i];
+    const B1 = ringB[j];
+
+    const tri1 = new THREE.BufferGeometry().setFromPoints([A0, B0, A1]);
+    tri1.setIndex([0, 1, 2]);
+    const tri2 = new THREE.BufferGeometry().setFromPoints([B0, B1, A1]);
+    tri2.setIndex([0, 1, 2]);
+
+    group.add(new THREE.Mesh(tri1, new THREE.MeshBasicMaterial({
+      color: 0xffd166,
+      transparent: true,
+      opacity: 0.55,
+      side: THREE.DoubleSide,
+    })));
+
+    group.add(new THREE.Mesh(tri2, new THREE.MeshBasicMaterial({
+      color: 0x8ecae6,
+      transparent: true,
+      opacity: 0.55,
+      side: THREE.DoubleSide,
+    })));
+
+    group.add(makeLine([B0, A1], 0xffffff)); // diagonal splitting the quad into two triangles
+
+    // A real TubeGeometry version below, for comparison.
+    const path = new THREE.LineCurve3(new THREE.Vector3(xA, -1.85, 0), new THREE.Vector3(xB, -1.85, 0));
+    const tube = new THREE.Mesh(
+      new THREE.TubeGeometry(path, 1, 0.28, radialSegments, false),
+      new THREE.MeshBasicMaterial({ color: 0x58c4dd, wireframe: true })
+    );
+    group.add(tube);
+
+    window.addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    function animate() {
+      controls.update();
+      group.rotation.y += 0.003;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

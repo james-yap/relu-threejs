@@ -29,7 +29,7 @@ slide2Group.add(...scatterPoints)
 slide2Group.position.set(...pos)
 
 
-const createCurveGeometry = (percentage: number) => {
+const createCurveGeometry = (percentage: number = 1) => {
   const curveLength = 3 * percentage;
   const curvePoints: THREE.Vector3[] = [
     new THREE.Vector3(0, 0, 0),
@@ -47,11 +47,12 @@ const createCurveGeometry = (percentage: number) => {
 };
 
 const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
-const curve = new THREE.Mesh(new THREE.BufferGeometry(), curveMaterial);
+const curve = new THREE.Mesh(createCurveGeometry(), curveMaterial);
 
 globalStepTracker.registerUpdator(2, (p) => {
-  curve.geometry.dispose();
-  curve.geometry = createCurveGeometry(p);
+  // curve.geometry.dispose();
+  // curve.geometry = createCurveGeometry(p);
+  curve.geometry.setDrawRange(0, Math.floor(p * curve.geometry.index!.count));
 })
 
 slide2Group.add(curve)

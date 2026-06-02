@@ -7,8 +7,8 @@ export const slide3Title = createHtmlPlane({
   html: '$$y_i = x_iw + b$$',
   id: 'slide3Title',
   className: 'blue-text',
-  width: 8,
-  height: 1.5,
+  width: 2,
+  height: 0.5,
 });
 
 globalStepTracker.registerUpdator(2, (p) => {

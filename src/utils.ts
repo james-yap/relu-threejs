@@ -42,7 +42,7 @@ export const createHtmlPlane = ({
   pixelsPerUnit = 100,
   debug = DEBUG,
   wireframeColor = 0x00ff00,
-  depthWrite = false,
+  depthWrite = true,
 }: HtmlPlaneConfig) => {
   const contentElement = typeof html === 'string' ? document.createElement('div') : html;
   const textureElement = document.createElement('div');
