@@ -61,5 +61,5 @@ function animate(_time: number) {
 
 initSlide1({ scene, camera, renderer, interactions })
 initSlide2({ scene })
-initSlide3({ scene })
+initSlide3({ scene, interactions })
 

@@ -3,8 +3,8 @@ import { globalStepTracker } from "./stepTracker";
 type StepStateType = {
   // config
   description: string;
-  duration: number;
-  ease: string;
+  duration: gsap.TweenValue;
+  ease: gsap.EaseString | gsap.EaseFunction;
 
   // state
   cameraX: number;
@@ -29,7 +29,7 @@ export class StepState {
     this._state = {
       ...state,
       duration: state.duration ?? 1,
-      ease: state.ease ?? 'expo.inOut',
+      ease: state.ease ?? 'power2.inOut',
     };
   }
 

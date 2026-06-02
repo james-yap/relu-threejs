@@ -24,6 +24,7 @@ export type HtmlPlaneConfig = {
   pixelsPerUnit?: number;
   debug?: boolean;
   wireframeColor?: THREE.ColorRepresentation;
+  depthWrite?: boolean;
 };
 
 type ThreeWithHtmlTexture = typeof THREE & {
@@ -41,6 +42,7 @@ export const createHtmlPlane = ({
   pixelsPerUnit = 100,
   debug = DEBUG,
   wireframeColor = 0x00ff00,
+  depthWrite = false,
 }: HtmlPlaneConfig) => {
   const contentElement = typeof html === 'string' ? document.createElement('div') : html;
   const textureElement = document.createElement('div');
@@ -64,7 +66,11 @@ export const createHtmlPlane = ({
   textureElement.appendChild(contentElement);
 
   const planeGeometry = new THREE.PlaneGeometry(width, height);
-  const material = new THREE.MeshBasicMaterial({ transparent: true });
+  const material = new THREE.MeshBasicMaterial({
+    transparent: true,
+    // Prevent invisible HTML plane pixels from occluding nearby geometry; caveat: labels no longer depth-occlude objects behind them.
+    depthWrite,
+  });
   const texture = new (THREE as ThreeWithHtmlTexture).HTMLTexture(textureElement);
   material.map = texture;
 
