@@ -3,8 +3,11 @@ import * as THREE from 'three';
 import { globalStepTracker } from '../../steps/stepTracker';
 import { createHtmlPlane } from '../../utils';
 
+const titleEl = document.createElement('div');
+titleEl.innerHTML = String.raw`$$y_i = x_iw + b$$`;
+
 export const slide3Title = createHtmlPlane({
-  html: '$$y_i = x_iw + b$$',
+  html: titleEl,
   id: 'slide3Title',
   className: 'blue-text',
   width: 2,

@@ -11,7 +11,6 @@ const scale = 0.6
 slide1GridGroup.position.set(-4.01, 1.5, 0.00)
 slide1GridGroup.scale.set(scale, scale, scale)
 
-const curveState = { xBound: -3 };
 
 const createReluGeometry = (xBound: number) => {
   const curvePoints: THREE.Vector3[] = [];
@@ -29,31 +28,35 @@ const createReluGeometry = (xBound: number) => {
     curvePath,
     100, // tubular segments
     0.05, // thickness / radius
-    8, // radial segments
+    3, // radial segments
     false
   );
 };
 
 const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
-const curve = new THREE.Mesh(createReluGeometry(curveState.xBound), curveMaterial);
+const curve = new THREE.Mesh(createReluGeometry(3), curveMaterial);
 
 slide1GridGroup.add(grid)
 slide1GridGroup.add(curve)
 
 const sphere = debugSphere.clone()
-sphere.position.set(curveState.xBound, Math.max(0, curveState.xBound), 0)
+// sphere.position.set(curveState.xBound, Math.max(0, curveState.xBound), 0)
 slide1GridGroup.add(sphere)
 
+
+const curveState = { p: 0 };
+
 gsap.to(curveState, {
-  xBound: 3,
+  p: 1,
   duration: 2,
   ease: 'sine.inOut',
   yoyo: true,
   repeat: -1,
   onUpdate: () => {
-    curve.geometry.dispose();
-    curve.geometry = createReluGeometry(curveState.xBound);
-    sphere.position.set(curveState.xBound, Math.max(0, curveState.xBound), 0);
+    // curve.geometry.dispose();
+    // curve.geometry = createReluGeometry(curveState.xBound);
+    curve.geometry.setDrawRange(0, Math.floor(curveState.p * curve.geometry.index!.count));
+    // sphere.position.set(curveState.xBound, Math.max(0, curveState.xBound), 0);
   },
 });
 

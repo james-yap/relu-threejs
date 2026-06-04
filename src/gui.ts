@@ -20,14 +20,14 @@ type GuiDependencies = {
 export function initGui({ scene, camera, controls, renderer, params }: GuiDependencies) {
   const gui = new GUI();
 
-  const lightingFolder = gui.addFolder('Lighting');
-  lightingFolder.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS).name('Hemi irradiance');
-  lightingFolder.add(params, 'bulbPower', BULB_POWER_OPTIONS).name('Bulb power');
-  lightingFolder.add(params, 'bulbDist', 0, 10).name('Bulb distance');
+  // const lightingFolder = gui.addFolder('Lighting');
+  // lightingFolder.add(params, 'hemiIrradiance', HEMI_IRRADIANCE_OPTIONS).name('Hemi irradiance');
+  // lightingFolder.add(params, 'bulbPower', BULB_POWER_OPTIONS).name('Bulb power');
+  // lightingFolder.add(params, 'bulbDist', 0, 10).name('Bulb distance');
 
-  const renderFolder = gui.addFolder('Render');
-  renderFolder.add(params, 'exposure', 0, 1).name('Exposure');
-  renderFolder.add(params, 'shadows').name('Shadows');
+  // const renderFolder = gui.addFolder('Render');
+  // renderFolder.add(params, 'exposure', 0, 1).name('Exposure');
+  // renderFolder.add(params, 'shadows').name('Shadows');
 
   const debugFolder = gui.addFolder('Debug');
   debugFolder
