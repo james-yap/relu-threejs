@@ -1,18 +1,11 @@
-import * as THREE from 'three';
-import { slide3Title } from './title';
-import { slide3Group } from './group';
-import type { InteractionManager } from 'three/examples/jsm/interaction/InteractionManager.js';
-import { slide3W } from './multipliers';
+import type { SlideDeps } from '../types';
+import { initSlide3Group } from './group';
+import { initSlide3Multipliers } from './multipliers';
+import { initSlide3Title } from './title';
 
-type Slide3Dependencies = {
-  scene: THREE.Scene;
-  interactions: InteractionManager;
-};
+export function initSlide3(deps: SlideDeps) {
+  initSlide3Title(deps);
+  initSlide3Group(deps);
+  initSlide3Multipliers(deps);
 
-export function initSlide3(deps: Slide3Dependencies) {
-  const { scene } = deps;
-
-  scene.add(slide3Title)
-  scene.add(slide3Group)
-  scene.add(slide3W)
 }

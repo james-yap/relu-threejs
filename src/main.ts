@@ -31,6 +31,7 @@ const startingCameraPos: [number, number, number] = [startingState.cameraX, star
 const startingTarget: [number, number, number] = [startingState.targetX, startingState.targetY, startingState.targetZ]
 
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enabled = params.debug;
 controls.minDistance = 1;
 controls.maxDistance = 20;
 
@@ -59,7 +60,7 @@ function animate(_time: number) {
   renderer.render(scene, camera);
 }
 
-initSlide1({ scene, camera, renderer, interactions })
-initSlide2({ scene })
+initSlide1({ scene, interactions })
+initSlide2({ scene, interactions })
 initSlide3({ scene, interactions })
 

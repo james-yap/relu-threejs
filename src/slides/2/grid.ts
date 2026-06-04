@@ -1,5 +1,7 @@
 import * as THREE from 'three';
+import { Line2 } from 'three/addons/lines/Line2.js';
 import { globalStepTracker } from '../../steps/stepTracker';
+import { LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';
 
 export const slide2Group = new THREE.Group();
 
@@ -28,31 +30,35 @@ const scatterPoints = x.map((xVal, i) => {
 slide2Group.add(...scatterPoints)
 slide2Group.position.set(...pos)
 
+const lineGeom = new LineGeometry();
+lineGeom.setPositions([
+  0, 0, 0,
+  3, 3, 0
+])
 
-const createCurveGeometry = (percentage: number = 1) => {
-  const curveLength = 3 * percentage;
-  const curvePoints: THREE.Vector3[] = [
-    new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(curveLength, curveLength, 0)
-  ];
+const lineMat = new LineMaterial({
+  color: 0x58C4DD,
+  linewidth: 0.05, // Thickness
+  worldUnits: true // Ensures thickness scales correctly in 3D space
+});
 
-  const curvePath = new THREE.CatmullRomCurve3(curvePoints);
-  return new THREE.TubeGeometry(
-    curvePath,
-    100, // tubular segments
-    0.05, // thickness / radius
-    8, // radial segments
-    false
-  );
-};
+const line = new Line2(lineGeom, lineMat);
+slide2Group.add(line)
 
-const curveMaterial = new THREE.MeshBasicMaterial({ color: 0x58C4DD });
-const curve = new THREE.Mesh(createCurveGeometry(), curveMaterial);
+export function updateSlide2Line(w: number, b: number) {
+  const yFunc = (x: number) => w * x + b;
+  line.geometry.setPositions([
+    0, yFunc(0), 0,
+    3, yFunc(3), 0
+  ])
+  line.geometry.attributes.position.needsUpdate = true;
+}
+
 
 globalStepTracker.registerUpdator(2, (p) => {
-  // curve.geometry.dispose();
-  // curve.geometry = createCurveGeometry(p);
-  curve.geometry.setDrawRange(0, Math.floor(p * curve.geometry.index!.count));
+  line.geometry.setPositions([
+    0, 0, 0,
+    3 * p, 3 * p, 0
+  ])
+  line.geometry.attributes.position.needsUpdate = true;
 })
-
-slide2Group.add(curve)

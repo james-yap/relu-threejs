@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import { DEBUG } from './constants';
 import { renderMathElement } from './mathjax';
+import type { InteractionManager } from 'three/examples/jsm/interaction/InteractionManager.js';
 
 export type GridHelperConfig = {
   xStart?: number;
@@ -19,6 +20,7 @@ export type HtmlPlaneConfig = {
   html: string | HTMLElement;
   width: number;
   height: number;
+  interactions: InteractionManager;
   id?: string;
   className?: string;
   pixelsPerUnit?: number;
@@ -38,6 +40,7 @@ export const createHtmlPlane = ({
   width,
   height,
   id,
+  interactions,
   className,
   pixelsPerUnit = 100,
   debug = DEBUG,
@@ -89,6 +92,7 @@ export const createHtmlPlane = ({
     mesh.add(new THREE.Mesh(planeGeometry, wireMaterial));
   }
 
+  interactions.add(mesh);
   return mesh;
 };
 
@@ -155,3 +159,23 @@ const geometry = new THREE.SphereGeometry(0.1, 32, 16);
 const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 export const debugSphere = new THREE.Mesh(geometry, material);
 
+
+export function setGroupOpacity(group: THREE.Object3D, opacity: number) {
+  group.traverse((child) => {
+    // Use instanceof to narrow the type to Mesh
+    if (child instanceof THREE.Mesh) {
+
+      // Three.js materials can sometimes be an array (MultiMaterial)
+      if (Array.isArray(child.material)) {
+        child.material.forEach(mat => {
+          mat.opacity = opacity;
+          mat.transparent = true; // Required for opacity to show
+        });
+      } else {
+        child.material.opacity = opacity;
+        child.material.transparent = true; // Required for opacity to show
+      }
+    }
+  });
+
+}

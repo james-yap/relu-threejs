@@ -1,26 +1,33 @@
-import * as THREE from 'three';
-import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
+import { createHtmlPlane } from '../../utils';
+import type { SlideDeps } from '../types';
 
-import { slide1TitleMesh } from './title';
 import { slide1GridGroup } from './relu';
-import { slide1Eqn } from './eqn';
 
-type Slide1Dependencies = {
-  scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
-  renderer: THREE.WebGLRenderer;
-  interactions: InteractionManager
-};
-
-let deps: Slide1Dependencies | null = null;
-
-export function initSlide1(interactionDependencies: Slide1Dependencies) {
-  deps = interactionDependencies;
+export function initSlide1(deps: SlideDeps) {
   const { scene, interactions } = deps;
 
+  const slide1TitleMesh = createHtmlPlane({
+    html: 'ReLU, explained quickly.',
+    className: 'text-blue-500 font-black text-5xl text-center grid place-items-center',
+    width: 7,
+    height: 1,
+    interactions
+  });
+  slide1TitleMesh.position.set(-3.99, 4, -0.00);
+  slide1TitleMesh.position.z = 0.05;
   scene.add(slide1TitleMesh);
-  interactions.add(slide1TitleMesh);
+
+
+  const slide1Eqn = createHtmlPlane({
+    html: String.raw`$$\text{ReLU}(x) = \text{max}(0, x)$$`,
+    id: 'slide1Eqn',
+    className: 'blue-text',
+    width: 5,
+    height: 1,
+    interactions
+  });
+  scene.add(slide1Eqn)
+  slide1Eqn.position.set(-3.98, 0.39, 0.00);
 
   scene.add(slide1GridGroup)
-  scene.add(slide1Eqn)
 }
