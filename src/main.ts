@@ -12,6 +12,7 @@ import { initGui } from './gui';
 import { getStartingState } from './steps';
 import { initSlide2 } from './slides/2';
 import { initSlide3 } from './slides/3';
+import { getUrlControlsEnabled } from './gui/utils';
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 
@@ -31,7 +32,7 @@ const startingCameraPos: [number, number, number] = [startingState.cameraX, star
 const startingTarget: [number, number, number] = [startingState.targetX, startingState.targetY, startingState.targetZ]
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enabled = params.debug;
+controls.enabled = getUrlControlsEnabled();
 controls.minDistance = 1;
 controls.maxDistance = 20;
 

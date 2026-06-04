@@ -3,11 +3,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import {
-  BULB_POWER_OPTIONS,
-  HEMI_IRRADIANCE_OPTIONS,
+  // BULB_POWER_OPTIONS,
+  // HEMI_IRRADIANCE_OPTIONS,
   type RuntimeParams,
-} from './constants';
-import { getCurrentStep, states, step } from './steps';
+} from '../constants';
+import { getCurrentStep, states, step } from '../steps';
+import { writeUrlControlsEnabled } from './utils';
 
 type GuiDependencies = {
   scene: THREE.Scene;
@@ -41,6 +42,13 @@ export function initGui({ scene, camera, controls, renderer, params }: GuiDepend
         url.searchParams.delete('mode');
       }
       window.location.href = url.toString();
+    });
+  debugFolder
+    .add(params, 'isControlsEnabled')
+    .name('Controls')
+    .onChange((enabled: boolean) => {
+      controls.enabled = enabled;
+      writeUrlControlsEnabled(enabled);
     });
 
   const stepOptions = states.map(({ description }) => description);

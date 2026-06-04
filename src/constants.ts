@@ -42,6 +42,7 @@ export type RuntimeParams = {
   hemiIrradiance: HemiIrradiance;
   bulbDist: number;
   startingStep: number;
+  isControlsEnabled: boolean;
 };
 
 export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
@@ -51,5 +52,6 @@ export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   bulbPower: BULB_POWER_OPTIONS[5],
   hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[3],
   bulbDist: 2,
-  startingStep: 0
+  startingStep: 0,
+  isControlsEnabled: false
 };
