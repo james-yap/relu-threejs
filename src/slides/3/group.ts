@@ -52,7 +52,7 @@ export const initSlide3Group = (deps: SlideDeps) => {
   group.add(slide3NeuronText)
 
   const x1Text = createHtmlPlane({
-    html: String.raw`$$ x_i $$`,
+    html: String.raw`$$ x $$`,
     className: 'blue-text',
     width: 0.5,
     height: 0.5,
@@ -62,7 +62,7 @@ export const initSlide3Group = (deps: SlideDeps) => {
   group.add(x1Text);
 
   const yText = createHtmlPlane({
-    html: String.raw`$$ y_i $$`,
+    html: String.raw`$$ y $$`,
     id: 'yTextSlide3',
     className: 'blue-text',
     width: 0.5,

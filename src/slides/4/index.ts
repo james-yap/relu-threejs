@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { createHtmlPlane } from '@/components/htmlPlane';
 import { initSlide4Neuron } from '@/slides/4/neuron';
 import type { SlideDeps } from '@/slides/types';
+import { globalStepTracker } from '@/steps/stepTracker';
 
 const group = new THREE.Group();
 group.position.set(3.21, -3.40, 0.00)
@@ -26,6 +27,30 @@ const scatterPoints = x.map((xVal, i) => {
   return point
 })
 group.add(...scatterPoints)
+
+
+const curvePoints: THREE.Vector3[] = [];
+for (let i = 0; i <= 3; i += 0.1) {
+  const X = new THREE.Vector3(Math.pow(i, 2), i, 1);
+  const w = new THREE.Vector3(0.98, -2.90, 2.14);
+  const y = X.dot(w);
+
+  curvePoints.push(new THREE.Vector3(i, y, 0));
+}
+const curvePath = new THREE.CatmullRomCurve3(curvePoints);
+const curveGeom = new THREE.TubeGeometry(
+  curvePath,
+  100, // tubular segments
+  0.05, // thickness / radius
+  3, // radial segments
+  false
+);
+const curveMat = new THREE.MeshBasicMaterial({
+  color: 0x58C4DD,
+  transparent: true
+});
+const curve = new THREE.Mesh(curveGeom, curveMat);
+group.add(curve)
 
 export function initSlide4(deps: SlideDeps) {
   const { scene, interactions } = deps;
@@ -54,3 +79,7 @@ export function initSlide4(deps: SlideDeps) {
   initSlide4Neuron(deps)
   scene.add(group)
 }
+
+globalStepTracker.registerUpdator(5, p => {
+  curveMat.opacity = p
+})

@@ -5,14 +5,13 @@ import { globalStepTracker } from '@/steps/stepTracker';
 import type { SlideDeps } from '@/slides/types';
 
 const titleEl = document.createElement('div');
-titleEl.innerHTML = String.raw`$$y_i = x_iw + b$$`;
+titleEl.innerHTML = String.raw`$$y = wx + b$$`;
 
 export function initSlide3Title(deps: SlideDeps) {
   const { interactions, scene } = deps;
 
   const slide3Title = createHtmlPlane({
     html: titleEl,
-    id: 'slide3Title',
     className: 'blue-text',
     width: 2,
     height: 0.5,
