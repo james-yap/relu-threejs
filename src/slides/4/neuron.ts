@@ -35,8 +35,8 @@ export function initSlide4Neuron(deps: SlideDeps) {
     depthWrite: true,
     interactions
   });
-  w1.position.set(9.15, -1.92, 0.05)
-  scene.add(w1)
+  w1.position.set(-0.75, 0.28, 0.05)
+  group.add(w1)
 
   const w2 = createHtmlPlane({
     html: String.raw`$$\times w_2$$`,
@@ -46,8 +46,8 @@ export function initSlide4Neuron(deps: SlideDeps) {
     depthWrite: true,
     interactions
   });
-  w2.position.set(9.15, -2.5, 0.05)
-  scene.add(w2)
+  w2.position.set(-0.75, -0.28, 0.05)
+  group.add(w2)
 
   const x = createHtmlPlane({
     html: String.raw`$$ x $$`,
@@ -56,8 +56,8 @@ export function initSlide4Neuron(deps: SlideDeps) {
     height: 0.45,
     interactions
   });
-  x.position.set(8.18, -1.7, 0.00)
-  scene.add(x);
+  x.position.set(-1.74, 0.51, 0.05)
+  group.add(x);
 
   const xSqr = createHtmlPlane({
     html: String.raw`$$ x^2 $$`,
@@ -66,8 +66,8 @@ export function initSlide4Neuron(deps: SlideDeps) {
     height: 0.45,
     interactions
   });
-  xSqr.position.set(8.20, -2.56, 0.00)
-  scene.add(xSqr);
+  xSqr.position.set(-1.74, -0.35, 0.05)
+  group.add(xSqr);
 
   scene.add(group);
 }

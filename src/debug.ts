@@ -24,6 +24,13 @@ const copyPointerButton = document.querySelector('#target-button')! as HTMLButto
 const copyCameraButton = document.querySelector('#cam-button')! as HTMLButtonElement;
 export const debugPanel = document.querySelector('#stats')! as HTMLDivElement;
 
+groupNameInput.defaultValue = new URLSearchParams(window.location.search).get("targetParent") ?? "";
+groupNameInput.addEventListener("change", () => {
+  const url = new URL(window.location.href);
+  url.searchParams.set("targetParent", groupNameInput.value);
+  window.history.replaceState(window.history.state, '', url);
+})
+
 copyPointerButton.addEventListener('click', (event) => {
   event.stopPropagation();
   isCopyMode = true;
