@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { createHtmlPlane } from '../utils';
+import { createHtmlPlane } from '@/components/htmlPlane';
 import type { InteractionManager } from 'three/examples/jsm/interaction/InteractionManager.js';
 
 const sliderLabel = cva('font-bold text-lg text-center grid place-items-center', {

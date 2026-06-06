@@ -1,6 +1,6 @@
-import { slide2Group } from './grid';
-import { createHtmlPlane } from '../../utils';
-import type { SlideDeps } from '../types';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import { slide2Group } from '@/slides/2/grid';
+import type { SlideDeps } from '@/slides/types';
 
 export function initSlide2(deps: SlideDeps) {
   const { scene, interactions } = deps;

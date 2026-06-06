@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
-import { globalStepTracker } from '../../steps/stepTracker';
-import { createHtmlPlane } from '../../utils';
-import type { SlideDeps } from '../types';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import { globalStepTracker } from '@/steps/stepTracker';
+import type { SlideDeps } from '@/slides/types';
 
 const titleEl = document.createElement('div');
 titleEl.innerHTML = String.raw`$$y_i = x_iw + b$$`;

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
-import { createCircleGeom } from '../3/group';
-import type { SlideDeps } from '../types';
-import { createHtmlPlane } from '../../utils';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import { createCircleGeom } from '@/slides/3/group';
+import type { SlideDeps } from '@/slides/types';
 
 const group = new THREE.Group();
 group.name = "slide4NeuronGroup"

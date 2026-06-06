@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 
-import { globalStepTracker } from '../../steps/stepTracker';
-import { createHtmlPlane, setGroupOpacity } from '../../utils';
-import type { SlideDeps } from '../types';
-import { updateSlide2Line } from '../2/grid';
-import { createSlider } from '../../components/slider';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import { createSlider } from '@/components/slider';
+import { updateSlide2Line } from '@/slides/2/grid';
+import type { SlideDeps } from '@/slides/types';
+import { globalStepTracker } from '@/steps/stepTracker';
+import { setGroupOpacity } from '@/utils';
 import { Line2, LineGeometry, LineMaterial, LineSegments2 } from 'three/examples/jsm/Addons.js';
 
 export const group = new THREE.Group();

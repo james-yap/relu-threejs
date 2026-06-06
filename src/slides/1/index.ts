@@ -1,7 +1,7 @@
-import { createHtmlPlane } from '../../utils';
-import type { SlideDeps } from '../types';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import type { SlideDeps } from '@/slides/types';
 
-import { slide1GridGroup } from './relu';
+import { slide1GridGroup } from '@/slides/1/relu';
 
 export function initSlide1(deps: SlideDeps) {
   const { scene, interactions } = deps;

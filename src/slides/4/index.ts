@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import type { SlideDeps } from '../types';
-import { createHtmlPlane } from '../../utils';
-import { initSlide4Neuron } from './neuron';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import { initSlide4Neuron } from '@/slides/4/neuron';
+import type { SlideDeps } from '@/slides/types';
 
 const group = new THREE.Group();
 group.position.set(3.21, -3.40, 0.00)

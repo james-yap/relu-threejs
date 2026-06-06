@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import gsap from "gsap"
 
-import { debugSphere, createGridHelper } from '../../utils';
+import { createGridHelper } from '@/components/grid';
+import { debugSphere } from '@/utils';
 
 export const slide1GridGroup = new THREE.Group();
 const grid = createGridHelper({ xStart: -3, xEnd: 3, yStart: -1, yEnd: 3 })

@@ -1,6 +1,6 @@
-import { globalStepTracker } from '../../steps/stepTracker';
-import { createHtmlPlane } from '../../utils';
-import type { SlideDeps } from '../types';
+import { createHtmlPlane } from '@/components/htmlPlane';
+import { globalStepTracker } from '@/steps/stepTracker';
+import type { SlideDeps } from '@/slides/types';
 
 export function initSlide3Multipliers(deps: SlideDeps) {
 
