@@ -29,7 +29,7 @@ export const states = [
     targetZ: 0.00,
   }),
   StepState.registered({
-    description: "Linear Neuron",
+    description: "Linear neuron",
     cameraX: 9.50,
     cameraY: 2.50,
     cameraZ: 3.30,
@@ -39,7 +39,16 @@ export const states = [
     duration: 2,
   }),
   StepState.registered({
-    description: "Quadratic Problem",
+    description: "Quadratic problem",
+    cameraX: 8.09,
+    cameraY: 0.01,
+    cameraZ: 5.63,
+    targetX: 8.08,
+    targetY: 0.01,
+    targetZ: -0.11,
+  }),
+  StepState.registered({
+    description: "Quadratic neuron",
     cameraX: 8.09,
     cameraY: 0.01,
     cameraZ: 5.63,
