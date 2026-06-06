@@ -71,5 +71,5 @@ initSlide1({ scene, interactions })
 initSlide2({ scene, interactions })
 initSlide3({ scene, interactions })
 initSlide4({ scene, interactions })
-initSlide5({ scene, interactions })
+initSlide5({ scene, interactions, camera, renderer })
 
