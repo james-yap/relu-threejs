@@ -9,6 +9,7 @@ import {
 } from '../constants';
 import { getCurrentStep, states, step } from '../steps';
 import { writeUrlControlsEnabled } from './utils';
+import { getPenOverlay } from '../pen';
 
 type GuiDependencies = {
   scene: THREE.Scene;
@@ -31,6 +32,11 @@ export function initGui({ scene, camera, controls, renderer, params }: GuiDepend
   // renderFolder.add(params, 'shadows').name('Shadows');
 
   const debugFolder = gui.addFolder('Debug');
+  const penOverlay = getPenOverlay();
+  const debugControls = {
+    pen: penOverlay.isEnabled(),
+  };
+
   debugFolder
     .add(params, 'debug')
     .name('Enabled')
@@ -49,6 +55,12 @@ export function initGui({ scene, camera, controls, renderer, params }: GuiDepend
     .onChange((enabled: boolean) => {
       controls.enabled = enabled;
       writeUrlControlsEnabled(enabled);
+    });
+  debugFolder
+    .add(debugControls, 'pen')
+    .name('Pen')
+    .onChange((enabled: boolean) => {
+      penOverlay.setEnabled(enabled);
     });
 
   const stepOptions = states.map(({ description }) => description);
