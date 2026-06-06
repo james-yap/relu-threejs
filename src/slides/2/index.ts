@@ -20,8 +20,8 @@ export function initSlide2(deps: SlideDeps) {
     html: 'GPA',
     id: 'slide2YLabel',
     className: 'blue-text',
-    width: 4,
-    height: 0.8,
+    width: 1,
+    height: 0.6,
     interactions
   });
   slide2YLabel.rotateZ(Math.PI / 2);

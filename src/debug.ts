@@ -5,10 +5,8 @@ import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js';
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
 import {
   BULB_LUMINOUS_POWERS,
-  DEBUG,
   type RuntimeParams,
 } from './constants';
-import { renderMath } from './mathjax';
 
 type DebugDependencies = {
   scene: THREE.Scene;
@@ -19,40 +17,21 @@ type DebugDependencies = {
 };
 
 let debugDependencies: DebugDependencies | null = null;
-let debugEnabled = DEBUG;
-export const debugPanel = document.getElementById('debug-panel')!;
-const debugStats = document.createElement('div');
-const copyPointerButton = document.createElement('button');
-const copyCameraButton = document.createElement('button');
-const renderMathButton = document.createElement('button');
 let isCopyMode = false;
-copyPointerButton.type = 'button';
-copyPointerButton.className = 'debug-panel-copy';
-copyPointerButton.textContent = 'Enter copy mode';
+
+const copyPointerButton = document.querySelector('#target-button')! as HTMLButtonElement;
+const copyCameraButton = document.querySelector('#cam-button')! as HTMLButtonElement;
+export const debugPanel = document.querySelector('#stats')! as HTMLDivElement;
+
 copyPointerButton.addEventListener('click', (event) => {
   event.stopPropagation();
   isCopyMode = true;
-  copyPointerButton.textContent = 'Click floor to copy';
+  copyPointerButton.style.borderColor = "yellow";
 });
-copyCameraButton.type = 'button';
-copyCameraButton.className = 'debug-panel-copy';
-copyCameraButton.textContent = 'Copy camera';
 copyCameraButton.addEventListener('click', async (event) => {
   event.stopPropagation();
   await copyCameraPosition();
 });
-renderMathButton.type = 'button';
-renderMathButton.className = 'debug-panel-copy';
-renderMathButton.textContent = 'Render math';
-renderMathButton.addEventListener('click', async (event) => {
-  event.stopPropagation();
-  await renderMath();
-});
-debugPanel.appendChild(debugStats);
-debugPanel.appendChild(copyPointerButton);
-debugPanel.appendChild(copyCameraButton);
-debugPanel.appendChild(renderMathButton);
-debugPanel.hidden = !DEBUG;
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -61,44 +40,6 @@ const cameraWorldPos = new THREE.Vector3();
 const pointerToCamera = new THREE.Vector3();
 const bulbPos = new THREE.Vector3();
 
-// const floorMat = new THREE.MeshStandardMaterial({
-//   roughness: 0.8,
-//   color: 0xffffff,
-//   metalness: 0.2,
-//   bumpScale: 1
-// });
-// const textureLoader = new THREE.TextureLoader();
-// textureLoader.load('textures/hardwood2_diffuse.jpg', function (map) {
-//
-//   map.wrapS = THREE.RepeatWrapping;
-//   map.wrapT = THREE.RepeatWrapping;
-//   map.anisotropy = 4;
-//   map.repeat.set(10, 24);
-//   map.colorSpace = THREE.SRGBColorSpace;
-//   floorMat.map = map;
-//   floorMat.needsUpdate = true;
-//
-// });
-// textureLoader.load('textures/hardwood2_bump.jpg', function (map) {
-//
-//   map.wrapS = THREE.RepeatWrapping;
-//   map.wrapT = THREE.RepeatWrapping;
-//   map.anisotropy = 4;
-//   map.repeat.set(10, 24);
-//   floorMat.bumpMap = map;
-//   floorMat.needsUpdate = true;
-//
-// });
-// textureLoader.load('textures/hardwood2_roughness.jpg', function (map) {
-//
-//   map.wrapS = THREE.RepeatWrapping;
-//   map.wrapT = THREE.RepeatWrapping;
-//   map.anisotropy = 4;
-//   map.repeat.set(10, 24);
-//   floorMat.roughnessMap = map;
-//   floorMat.needsUpdate = true;
-//
-// });
 const floorMat = new THREE.MeshBasicMaterial({
   transparent: true,
   opacity: 0,
@@ -143,11 +84,7 @@ bulbLight.add(new THREE.Mesh(bulbGeometry, bulbMat));
 bulbLight.position.set(0, 0, 5);
 bulbLight.castShadow = true;
 
-
-
 export function setDebugEnabled(enabled: boolean) {
-  debugEnabled = enabled;
-  debugPanel.hidden = !enabled;
   floorMesh.visible = enabled;
   floorGridHelper.visible = enabled;
   // if (controls) controls.enabled = enabled;
@@ -166,7 +103,6 @@ export function initDebug(dependencies: DebugDependencies) {
   setDebugEnabled(params.debug);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
-    if (!debugEnabled) return;
     updatePointerPosition(event, renderer, camera);
     updateBulbPosition();
   });
@@ -180,7 +116,7 @@ export function initDebug(dependencies: DebugDependencies) {
 }
 
 export function renderDebug() {
-  if (!debugEnabled || debugDependencies === null) return;
+  if (debugDependencies === null) return;
 
   const { params } = debugDependencies
 
@@ -199,7 +135,7 @@ function updateCameraPositionPanel(camera: THREE.Camera) {
   camera.getWorldPosition(cameraWorldPos);
 
   const { x, y, z } = cameraWorldPos;
-  debugStats.textContent = `Camera position
+  debugPanel.textContent = `Camera position
 x: ${x.toFixed(2)}
 y: ${y.toFixed(2)}
 z: ${z.toFixed(2)}
@@ -233,15 +169,14 @@ function updateBulbPosition() {
 async function copyPointerPosition() {
   try {
     await navigator.clipboard.writeText(formatPointerPosition());
-    copyPointerButton.textContent = 'Copied!';
+    copyPointerButton.style.borderColor = "green";
   } catch (error) {
     console.error('Failed to copy pointer position', error);
-    copyPointerButton.textContent = 'Copy failed';
   }
 
   isCopyMode = false;
   window.setTimeout(() => {
-    copyPointerButton.textContent = 'Enter copy mode';
+    copyPointerButton.style.removeProperty("border-color")
   }, 1200);
 }
 
@@ -250,14 +185,14 @@ async function copyCameraPosition() {
 
   try {
     await navigator.clipboard.writeText(formatCameraPosition(debugDependencies.camera, debugDependencies.controls));
-    copyCameraButton.textContent = 'Copied camera!';
+    copyCameraButton.style.borderColor = "green";
   } catch (error) {
+    copyCameraButton.style.borderColor = "red";
     console.error('Failed to copy camera position', error);
-    copyCameraButton.textContent = 'Copy failed';
   }
 
   window.setTimeout(() => {
-    copyCameraButton.textContent = 'Copy camera';
+    copyCameraButton.style.removeProperty("border-color")
   }, 1200);
 }
 

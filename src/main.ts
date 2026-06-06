@@ -3,6 +3,7 @@ import { InteractionManager } from 'three/addons/interaction/InteractionManager.
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import './style.css'
+import './icons'
 import { setupResize } from './eventListeners';
 import { setupPolyfill } from './setupPolyfill'
 import { debugPanel, initDebug, renderDebug } from './debug'

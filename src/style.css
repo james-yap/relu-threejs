@@ -31,41 +31,23 @@ mjx-container {
 
 #debug-panel {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   bottom: 12px;
   right: 12px;
   z-index: 10;
   min-width: 160px;
-  padding: 10px 12px;
   border-radius: 8px;
   background: rgb(0 0 0 / 70%);
   color: #fff;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 12px;
   line-height: 1.5;
-  pointer-events: none;
   white-space: pre;
-}
-
-.debug-panel-copy {
-  display: block;
-  margin-top: 6px;
-  padding: 4px 6px;
-  border: 1px solid rgb(255 255 255 / 40%);
-  border-radius: 4px;
-  background: rgb(255 255 255 / 12%);
-  color: #fff;
-  cursor: pointer;
-  font: inherit;
-  pointer-events: auto;
-}
-
-.debug-panel-copy:hover {
-  background: rgb(255 255 255 / 22%);
 }
 
 .debug-panel-notice {
   margin-top: 8px;
-  pointer-events: auto;
   white-space: normal;
 }
 
