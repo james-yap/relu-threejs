@@ -11,6 +11,7 @@ export function getPenOverlay(): PenOverlay {
 
   const canvas = document.createElement('canvas');
   canvas.id = 'pen-overlay';
+  canvas.className = 'fixed inset-0 z-[9] pointer-events-none';
   document.body.appendChild(canvas);
 
   const context = canvas.getContext('2d');
@@ -39,7 +40,9 @@ export function getPenOverlay(): PenOverlay {
 
   const setEnabled = (nextEnabled: boolean) => {
     enabled = nextEnabled;
-    canvas.classList.toggle('enabled', enabled);
+    canvas.classList.toggle('pointer-events-auto', enabled);
+    canvas.classList.toggle('cursor-crosshair', enabled);
+    canvas.classList.toggle('pointer-events-none', !enabled);
     if (!enabled) drawing = false;
   };
 

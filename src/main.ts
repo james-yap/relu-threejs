@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
 
 import './style.css'
 import './icons'
@@ -26,10 +27,18 @@ const interactions = new InteractionManager();
 const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0f0e0d, 0.02);
 
 const startingState = getStartingState();
+const app = document.getElementById('app')!;
+
 const renderer = new THREE.WebGLRenderer();
+renderer.domElement.className = 'absolute inset-0 z-0';
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setAnimationLoop(animate);
-document.getElementById('app')!.appendChild(renderer.domElement)
+app.appendChild(renderer.domElement)
+
+const cssRenderer = new CSS3DRenderer();
+cssRenderer.domElement.className = 'absolute inset-0 z-[1] pointer-events-none';
+cssRenderer.setSize(window.innerWidth, window.innerHeight);
+app.appendChild(cssRenderer.domElement)
 
 
 const startingCameraPos: [number, number, number] = [startingState.cameraX, startingState.cameraY, startingState.cameraZ]
@@ -43,7 +52,7 @@ controls.maxDistance = 20;
 initDebug({ scene, camera, controls, renderer, params });
 initGui({ scene, camera, controls, renderer, params });
 setupPolyfill(debugPanel);
-setupResize(renderer, camera);
+setupResize(camera, [renderer, cssRenderer]);
 
 scene.add(hemiLight);
 
@@ -65,6 +74,7 @@ function animate(_time: number) {
   renderDebug();
   interactions.update();
   renderer.render(scene, camera);
+  cssRenderer.render(scene, camera);
 }
 
 initSlide1({ scene, interactions })
