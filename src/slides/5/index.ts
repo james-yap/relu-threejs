@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';
 import { createNumberPlane } from '@/components/grid';
+import { createPointHoverRaycaster, type PointHoverRaycaster } from '@/slides/5/pointRaycaster';
 import type { SlideDeps } from '@/slides/types';
 
 type Slide5Deps = SlideDeps & {
@@ -11,6 +11,7 @@ type Slide5Deps = SlideDeps & {
 const group = new THREE.Group();
 group.name = "circlesGroup"
 group.position.set(16.02, -0.02, 0.00)
+let pointHoverRaycaster: PointHoverRaycaster | null = null;
 
 const plane = createNumberPlane({
   xRange: [-1.5, 1.5, 0.5],
@@ -26,7 +27,7 @@ const y = [-0.1281303519112823, -0.23000816550472805, 0.1808121482193767, 0.1022
 const labels = [0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0];
 
 export function initSlide5(deps: Slide5Deps) {
-  const { scene, camera, renderer } = deps;
+  const { scene, camera, renderer, interactions } = deps;
   scene.add(group)
 
   const scatterPoints = x.map((xVal, i) => {
@@ -45,112 +46,14 @@ export function initSlide5(deps: Slide5Deps) {
   })
   group.add(...scatterPoints)
 
-  const hoverLineGeometry = new LineGeometry();
-  hoverLineGeometry.setPositions([0, 0, 0, 0, 0, 0]);
-  const hoverLine = new Line2(
-    hoverLineGeometry,
-    new LineMaterial({
-      color: 0x58C4DD,
-      depthTest: false,
-      transparent: true,
-      opacity: 0.95,
-      linewidth: 0.07,
-      worldUnits: true,
-    })
-  );
-  hoverLine.renderOrder = 10;
-  hoverLine.visible = false;
-  group.add(hoverLine);
-
-  const distanceLabel = createDistanceLabel();
-  distanceLabel.visible = false;
-  group.add(distanceLabel);
-
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
-  const labelOffset = new THREE.Vector3(0, 0.35, 0.05);
-  let hoveredPoint: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial> | null = null;
-
-  const clearHoveredPoint = () => {
-    if (!hoveredPoint) return;
-
-    hoveredPoint.scale.setScalar(1);
-    hoveredPoint.material.color.setHex(hoveredPoint.userData.baseColor as number);
-    hoveredPoint = null;
-  };
-
-  renderer.domElement.addEventListener('pointermove', (event) => {
-    const rect = renderer.domElement.getBoundingClientRect();
-    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-
-    raycaster.setFromCamera(pointer, camera);
-    const [hit] = raycaster.intersectObjects(scatterPoints, false);
-
-    if (!hit) {
-      clearHoveredPoint();
-      hoverLine.visible = false;
-      distanceLabel.visible = false;
-      return;
-    }
-
-    const point = hit.object as THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
-    if (hoveredPoint !== point) {
-      clearHoveredPoint();
-      hoveredPoint = point;
-      hoveredPoint.scale.setScalar(1.8);
-      hoveredPoint.material.color.setHex(0xffd166);
-    }
-
-    hoverLineGeometry.setPositions([0, 0, 0, point.position.x, point.position.y, point.position.z]);
-    hoverLine.visible = true;
-
-    const distFloat = point.position.length();
-    updateDistanceLabel(distanceLabel, distFloat);
-    distanceLabel.position.copy(point.position).add(labelOffset);
-    distanceLabel.visible = true;
+  pointHoverRaycaster = createPointHoverRaycaster({
+    group,
+    points: scatterPoints,
+    camera,
+    renderer,
   });
+  pointHoverRaycaster.enable();
 }
 
-function createDistanceLabel() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 384;
-  canvas.height = 128;
-
-  const texture = new THREE.CanvasTexture(canvas);
-  const material = new THREE.SpriteMaterial({
-    map: texture,
-    transparent: true,
-    depthTest: false,
-  });
-  const sprite = new THREE.Sprite(material);
-  sprite.scale.set(1.35, 0.45, 1);
-  sprite.renderOrder = 11;
-  sprite.userData.canvas = canvas;
-  sprite.userData.texture = texture;
-
-  return sprite;
-}
-
-function updateDistanceLabel(sprite: THREE.Sprite, distFloat: number) {
-  const canvas = sprite.userData.canvas as HTMLCanvasElement;
-  const texture = sprite.userData.texture as THREE.CanvasTexture;
-  const context = canvas.getContext('2d');
-  if (!context) return;
-
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  context.font = '700 56px sans-serif';
-  context.textAlign = 'center';
-  context.textBaseline = 'middle';
-  context.fillStyle = 'rgba(0, 0, 0, 0.72)';
-  context.fillRect(28, 14, 328, 88);
-  context.strokeStyle = '#58C4DD';
-  context.lineWidth = 4;
-  context.strokeRect(28, 14, 328, 88);
-  context.fillStyle = '#58C4DD';
-  context.fillText(`z = ${distFloat.toFixed(2)}`, canvas.width / 2, canvas.height / 2);
-
-  texture.needsUpdate = true;
-}
 
 
