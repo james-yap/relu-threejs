@@ -53,5 +53,5 @@ export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[3],
   bulbDist: 2,
   startingStep: 0,
-  isControlsEnabled: false
+  isControlsEnabled: urlParams.get('controls') === "true"
 };

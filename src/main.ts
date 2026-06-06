@@ -13,6 +13,7 @@ import { getStartingState } from './steps';
 import { initSlide2 } from './slides/2';
 import { initSlide3 } from './slides/3';
 import { getUrlControlsEnabled } from './gui/utils';
+import { renderBeams } from './slides/3/group';
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 
@@ -55,6 +56,8 @@ function animate(_time: number) {
   hemiLight.intensity = HEMI_LUMINOUS_IRRADIANCES[params.hemiIrradiance];
   renderer.toneMappingExposure = params.exposure;
   renderer.shadowMap.enabled = params.shadows;
+
+  renderBeams();
 
   renderDebug();
   interactions.update();

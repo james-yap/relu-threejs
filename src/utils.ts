@@ -20,13 +20,14 @@ export type HtmlPlaneConfig = {
   html: string | HTMLElement;
   width: number;
   height: number;
-  interactions: InteractionManager;
+  interactions?: InteractionManager;
   id?: string;
   className?: string;
   pixelsPerUnit?: number;
   debug?: boolean;
   wireframeColor?: THREE.ColorRepresentation;
   depthWrite?: boolean;
+  alphaTest?: number;
 };
 
 type ThreeWithHtmlTexture = typeof THREE & {
@@ -46,6 +47,7 @@ export const createHtmlPlane = ({
   debug = DEBUG,
   wireframeColor = 0x00ff00,
   depthWrite = true,
+  alphaTest = 0.01,
 }: HtmlPlaneConfig) => {
   const contentElement = typeof html === 'string' ? document.createElement('div') : html;
   const textureElement = document.createElement('div');
@@ -71,7 +73,8 @@ export const createHtmlPlane = ({
   const planeGeometry = new THREE.PlaneGeometry(width, height);
   const material = new THREE.MeshBasicMaterial({
     transparent: true,
-    // Prevent invisible HTML plane pixels from occluding nearby geometry; caveat: labels no longer depth-occlude objects behind them.
+    // Discard fully transparent texture pixels before depth/color writes, so only visible HTML glyphs occlude 3D geometry.
+    alphaTest,
     depthWrite,
   });
   const texture = new (THREE as ThreeWithHtmlTexture).HTMLTexture(textureElement);
@@ -92,7 +95,7 @@ export const createHtmlPlane = ({
     mesh.add(new THREE.Mesh(planeGeometry, wireMaterial));
   }
 
-  interactions.add(mesh);
+  if (interactions) interactions.add(mesh);
   return mesh;
 };
 
