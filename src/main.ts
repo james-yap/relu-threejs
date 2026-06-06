@@ -14,6 +14,7 @@ import { initSlide2 } from './slides/2';
 import { initSlide3 } from './slides/3';
 import { getUrlControlsEnabled } from './gui/utils';
 import { renderBeams } from './slides/3/group';
+import { initSlide4 } from './slides/4';
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 
@@ -67,4 +68,5 @@ function animate(_time: number) {
 initSlide1({ scene, interactions })
 initSlide2({ scene, interactions })
 initSlide3({ scene, interactions })
+initSlide4({ scene, interactions })
 

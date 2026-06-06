@@ -38,4 +38,13 @@ export const states = [
     targetZ: -0.26,
     duration: 2,
   }),
+  StepState.registered({
+    description: "Quadratic Problem",
+    cameraX: 8.09,
+    cameraY: 0.01,
+    cameraZ: 5.63,
+    targetX: 8.08,
+    targetY: 0.01,
+    targetZ: -0.11,
+  }),
 ]

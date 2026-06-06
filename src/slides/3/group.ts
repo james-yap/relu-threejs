@@ -10,8 +10,8 @@ import { Line2, LineGeometry, LineMaterial, LineSegments2 } from 'three/examples
 export const group = new THREE.Group();
 group.position.set(10.00, 2.25, 0.00);
 
-const createCurveGeometry = (percentage: number = 100) => {
-  const radians = 2.1 * Math.PI * percentage;
+export const createCircleGeom = (percentage: number = 1) => {
+  const radians = 2 * Math.PI * percentage;
   const curvePoints: THREE.Vector3[] = [];
   const phaseOffset = Math.PI - 0.1;
   const radius = 0.8;
@@ -29,11 +29,11 @@ const createCurveGeometry = (percentage: number = 100) => {
     false
   );
 };
-const curveMaterial = new THREE.MeshBasicMaterial({
+const neuronMaterial = new THREE.MeshBasicMaterial({
   color: 0x58C4DD,
-  transparent: true
+  // transparent: true
 });
-const curve = new THREE.Mesh(createCurveGeometry(), curveMaterial);
+const curve = new THREE.Mesh(createCircleGeom(), neuronMaterial);
 group.add(curve)
 
 export const initSlide3Group = (deps: SlideDeps) => {

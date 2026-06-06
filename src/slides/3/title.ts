@@ -24,8 +24,8 @@ export function initSlide3Title(deps: SlideDeps) {
   })
 
   globalStepTracker.registerUpdator(3, (p) => {
-    const a = new THREE.Vector3(8, 2.25, 0.00);
-    const b = new THREE.Vector3(9.95, 3.90, 0.00);
+    const a = new THREE.Vector3(8, 2.25, 0.01);
+    const b = new THREE.Vector3(9.95, 3.90, 0.01);
     const dir = new THREE.Vector3().subVectors(b, a).multiplyScalar(p);
     const pos = new THREE.Vector3().addVectors(a, dir)
     slide3Title.position.copy(pos);
