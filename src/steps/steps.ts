@@ -56,4 +56,13 @@ export const states = [
     targetY: 0.01,
     targetZ: -0.11,
   }),
+  StepState.registered({
+    description: "Circles dataset",
+    cameraX: 15.58,
+    cameraY: 0.10,
+    cameraZ: 5.62,
+    targetX: 15.57,
+    targetY: 0.10,
+    targetZ: -0.12,
+  }),
 ]
