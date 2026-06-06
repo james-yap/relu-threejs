@@ -20,7 +20,7 @@ class StepTracker {
     // run once from query params
     const urlParams = new URLSearchParams(window.location.search);
     const defaultStep = parseInt(urlParams.get('step') ?? '0');
-    callback(targetStep === defaultStep ? 1 : 0);
+    callback(targetStep <= defaultStep ? 1 : 0);
 
     const updators = this._updators;
     if (!updators.has(targetStep)) updators.set(targetStep, []);
