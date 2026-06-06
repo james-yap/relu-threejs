@@ -19,6 +19,7 @@ type DebugDependencies = {
 let debugDependencies: DebugDependencies | null = null;
 let isCopyMode = false;
 
+const groupNameInput = document.querySelector('#group-input')! as HTMLInputElement;
 const copyPointerButton = document.querySelector('#target-button')! as HTMLButtonElement;
 const copyCameraButton = document.querySelector('#cam-button')! as HTMLButtonElement;
 export const debugPanel = document.querySelector('#stats')! as HTMLDivElement;
@@ -168,9 +169,17 @@ function updateBulbPosition() {
 
 async function copyPointerPosition() {
   try {
-    await navigator.clipboard.writeText(formatPointerPosition());
+    const groupName = groupNameInput.value;
+    const object = debugDependencies!.scene.getObjectByName(groupName);
+
+    if (groupName && !object) {
+      if (!object) throw new Error(`Object "${groupName}" not found in scene`)
+    }
+
+    await navigator.clipboard.writeText(formatPointerPosition(object));
     copyPointerButton.style.borderColor = "green";
   } catch (error) {
+    copyPointerButton.style.borderColor = "red";
     console.error('Failed to copy pointer position', error);
   }
 
@@ -196,8 +205,10 @@ async function copyCameraPosition() {
   }, 1200);
 }
 
-function formatPointerPosition() {
-  return `${pointerOnPlane.x.toFixed(2)}, ${pointerOnPlane.y.toFixed(2)}, ${pointerOnPlane.z.toFixed(2)}`;
+function formatPointerPosition(parent?: THREE.Object3D) {
+  let pos = pointerOnPlane;
+  if (parent) pos = parent.worldToLocal(pointerOnPlane);
+  return `${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)}`;
 }
 
 function formatCameraPosition(camera: THREE.Camera, controls: OrbitControls) {

@@ -5,6 +5,7 @@ import type { SlideDeps } from '../types';
 import { createHtmlPlane } from '../../utils';
 
 const group = new THREE.Group();
+group.name = "slide4NeuronGroup"
 group.position.set(9.93, -2.22, 0.00);
 
 const neuron = new THREE.Mesh(createCircleGeom(), new THREE.MeshBasicMaterial({
