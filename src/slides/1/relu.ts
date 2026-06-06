@@ -1,11 +1,16 @@
 import * as THREE from 'three';
 import gsap from "gsap"
 
-import { createGridHelper } from '@/components/grid';
+import { createNumberPlane } from '@/components/grid';
 import { debugSphere } from '@/utils';
 
 export const slide1GridGroup = new THREE.Group();
-const grid = createGridHelper({ xStart: -3, xEnd: 3, yStart: -1, yEnd: 3 })
+const grid = createNumberPlane({
+  xRange: [-3, 3, 1],
+  yRange: [-1, 3, 1],
+  xLength: 6,
+  yLength: 4,
+})
 
 const scale = 0.6
 

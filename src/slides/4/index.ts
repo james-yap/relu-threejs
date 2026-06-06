@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createHtmlPlane } from '@/components/htmlPlane';
+import { createNumberPlane } from '@/components/grid';
 import { initSlide4Neuron } from '@/slides/4/neuron';
 import type { SlideDeps } from '@/slides/types';
 import { globalStepTracker } from '@/steps/stepTracker';
@@ -7,9 +8,14 @@ import { globalStepTracker } from '@/steps/stepTracker';
 const group = new THREE.Group();
 group.position.set(3.21, -3.40, 0.00)
 
-const axesHelper = new THREE.AxesHelper(3);
-group.add(axesHelper);
-
+const plane = createNumberPlane({
+  xRange: [0, 3, 1],
+  yRange: [0, 3, 1],
+  xLength: 3,
+  yLength: 3,
+  showZAxis: false,
+});
+group.add(plane);
 
 const x = [0.0, 0.3333333333333333, 0.6666666666666666, 1.0, 1.3333333333333333, 1.6666666666666665, 2.0, 2.333333333333333, 2.6666666666666665, 3.0];
 const y = [2.2857495229031564, 1.5794627534632775, 0.766572832730836, 0.3161792171298822, -0.023003558062765564, 0.16630204907028737, 0.2613737287775476, 0.704116241050859, 1.419514591906635, 2.215099751141758];
@@ -22,7 +28,7 @@ const scatterPoints = x.map((xVal, i) => {
     new THREE.MeshBasicMaterial({ color: 0xff4d6d })
   );
 
-  point.position.set(xVal, yVal, 0)
+  point.position.copy(plane.coordsToPoint(xVal, yVal))
 
   return point
 })
@@ -35,7 +41,7 @@ for (let i = 0; i <= 3; i += 0.1) {
   const w = new THREE.Vector3(0.98, -2.90, 2.14);
   const y = X.dot(w);
 
-  curvePoints.push(new THREE.Vector3(i, y, 0));
+  curvePoints.push(plane.coordsToPoint(i, y));
 }
 const curvePath = new THREE.CatmullRomCurve3(curvePoints);
 const curveGeom = new THREE.TubeGeometry(
