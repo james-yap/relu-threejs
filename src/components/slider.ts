@@ -1,6 +1,35 @@
 import * as THREE from 'three';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { createHtmlPlane } from '../utils';
 import type { InteractionManager } from 'three/examples/jsm/interaction/InteractionManager.js';
+
+const sliderLabel = cva('font-bold text-lg text-center grid place-items-center', {
+  variants: {
+    color: {
+      blue: 'text-blue-500',
+      red: 'text-red-500',
+      green: 'text-green-500',
+    },
+  },
+  defaultVariants: {
+    color: 'blue',
+  },
+});
+
+const sliderInput = cva('', {
+  variants: {
+    color: {
+      blue: 'accent-blue-500',
+      red: 'accent-red-500',
+      green: 'accent-green-500',
+    },
+  },
+  defaultVariants: {
+    color: 'blue',
+  },
+});
+
+type SliderColor = VariantProps<typeof sliderLabel>['color'];
 
 type Props = {
   name: string;
@@ -10,7 +39,7 @@ type Props = {
   max: number;
   step: number;
   callbackFn: (val: number) => void;
-  color?: string;
+  color?: SliderColor;
 }
 
 export function createSlider({
@@ -29,7 +58,7 @@ export function createSlider({
   labelElt.innerHTML = `${name} = ${defaultValue}`;
   const label = createHtmlPlane({
     html: labelElt,
-    className: `text-${color}-500 font-bold text-lg text-center grid place-items-center`,
+    className: sliderLabel({ color }),
     width: 1,
     height: 0.3,
     interactions
@@ -38,7 +67,7 @@ export function createSlider({
   group.add(label);
 
   const sliderElt = document.createElement('div')
-  sliderElt.innerHTML = `<input type="range" min="${min}" max="${max}" step="${step}" class="accent-${color}-500"  />`
+  sliderElt.innerHTML = `<input type="range" min="${min}" max="${max}" step="${step}" class="${sliderInput({ color })}"  />`
 
   sliderElt.addEventListener("input", (e) => {
     if (!e.target) return;
