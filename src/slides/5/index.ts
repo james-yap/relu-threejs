@@ -81,29 +81,29 @@ export function initSlide5(deps: Slide5Deps) {
   initSlide5Neuron(deps)
 }
 
-function createDesmosObject() {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'w-[500px] h-[500px] bg-white border border-[#ccc] pointer-events-auto';
-
-  const iframe = document.createElement('iframe');
-  iframe.className = 'block w-[700px] h-[400px] border-0 bg-white [backface-visibility:hidden]';
-  iframe.src = 'https://www.desmos.com/calculator/zgtart4esh';
-  iframe.title = 'Desmos calculator';
-  wrapper.appendChild(iframe);
-
-  const object = new CSS3DObject(wrapper);
-  object.position.set(6, 1, 1);
-  object.rotateX(Math.PI / 2);
-  object.scale.setScalar(0);
-
-  return object;
-}
-const desmos = createDesmosObject()
-group.add(desmos);
+// function createDesmosObject() {
+//   const wrapper = document.createElement('div');
+//   wrapper.className = 'w-[500px] h-[500px] bg-white border border-[#ccc] pointer-events-auto';
+//
+//   const iframe = document.createElement('iframe');
+//   iframe.className = 'block w-[700px] h-[400px] border-0 bg-white [backface-visibility:hidden]';
+//   iframe.src = 'https://www.desmos.com/calculator/zgtart4esh';
+//   iframe.title = 'Desmos calculator';
+//   wrapper.appendChild(iframe);
+//
+//   const object = new CSS3DObject(wrapper);
+//   object.position.set(6, 1, 1);
+//   object.rotateX(Math.PI / 2);
+//   object.scale.setScalar(0);
+//
+//   return object;
+// }
+// const desmos = createDesmosObject()
+// group.add(desmos);
 
 
 globalStepTracker.registerUpdator(7, (p) => {
-  desmos.scale.setScalar(0.01 * p);
+  // desmos.scale.setScalar(0.01 * p);
   plane.zAxis.material.opacity = p;
 })
 
@@ -130,9 +130,7 @@ globalStepTracker.registerUpdator(8, (p) => {
 });
 
 globalStepTracker.registerUpdator(9, p => {
-  desmos.scale.setScalar(0.01 * (1 - p));
-
-
+  // desmos.scale.setScalar(0.01 * (1 - p));
 })
 
 globalStepTracker.registerUpdator(10, p => {
