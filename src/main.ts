@@ -18,6 +18,7 @@ import { getUrlControlsEnabled } from './gui/utils';
 import { renderBeams } from './slides/3/group';
 import { initSlide4 } from './slides/4';
 import { initSlide5 } from './slides/5';
+import { renderBeam5 } from './slides/5/neuron';
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 
@@ -70,6 +71,7 @@ function animate(_time: number) {
   renderer.shadowMap.enabled = params.shadows;
 
   renderBeams();
+  renderBeam5();
 
   renderDebug();
   interactions.update();

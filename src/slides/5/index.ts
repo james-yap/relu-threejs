@@ -30,7 +30,8 @@ const y = [-0.04479644105393596, -0.05156666939119506, -0.11399355103691615, 0.0
 const labels = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].reverse();
 
 
-const scatterPoints = x.map((xVal, i) => {
+export const disks5 = new THREE.Group();
+x.forEach((xVal, i) => {
   const yVal = y[i];
   const baseColor = labels[i] ? 0xff4d6d : 0x5CD0B3;
 
@@ -64,9 +65,16 @@ const scatterPoints = x.map((xVal, i) => {
   // circ.rotateZ(Math.PI * 2 * Math.random())
   container.add(circ)
 
-  return container
+  disks5.add(container)
 })
-group.add(...scatterPoints)
+group.add(disks5);
+
+export const decisionCirc5 = new Circle({
+  radius: 0,
+  linewidth: 8,
+  color: "white"
+})
+group.add(decisionCirc5)
 
 export function initSlide5(deps: Slide5Deps) {
   const { scene } = deps;
@@ -103,10 +111,10 @@ globalStepTracker.registerUpdator(7, (p) => {
 
 const lagRatio = 0.03;
 const circleDuration = 1;
-const totalDuration = circleDuration + lagRatio * (scatterPoints.length - 1);
+const totalDuration = circleDuration + lagRatio * (disks5.children.length - 1);
 
 globalStepTracker.registerUpdator(8, (p) => {
-  scatterPoints.forEach((i, index) => {
+  disks5.children.forEach((i, index) => {
     const point = i.children[0];
     const circ = i.children[1] as Circle;
 
@@ -124,5 +132,24 @@ globalStepTracker.registerUpdator(8, (p) => {
 
 globalStepTracker.registerUpdator(9, p => {
   desmos.scale.setScalar(0.01 * (1 - p));
+
+
+})
+
+globalStepTracker.registerUpdator(10, p => {
+  disks5.children.forEach((i, index) => {
+    const point = i.children[0];
+    const circ = i.children[1] as Circle;
+
+    const localP = THREE.MathUtils.clamp(
+      (p * totalDuration - index * lagRatio) / circleDuration,
+      0,
+      1,
+    );
+    const easedP = THREE.MathUtils.smootherstep(localP, 0, 1);
+
+    i.position.z = (1 - easedP) * point.position.length();
+    circ.setPercentage(1 - localP);
+  });
 })
 

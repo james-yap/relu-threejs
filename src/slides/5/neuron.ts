@@ -3,20 +3,25 @@ import * as THREE from 'three';
 import { createHtmlPlane } from '@/components/htmlPlane';
 import type { SlideDeps } from '@/slides/types';
 import { Circle } from '@/components/circle';
-import { LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three/examples/jsm/Addons.js';
+import { Line2, LineGeometry, LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three/examples/jsm/Addons.js';
+import { globalStepTracker } from '@/steps/stepTracker';
+import { setGroupOpacity } from '@/utils';
+import { createSlider } from '@/components/slider';
+import { decisionCirc5, disks5 } from '.';
+import { currentStep } from '@/steps';
 
 const group = new THREE.Group();
 group.name = "slide5NeuronGroup"
-group.position.set(22.84, -0.13, 0.00);
+group.position.set(22.84, 1, 1);
 
 const neuron = new Circle({
   radius: 1,
   linewidth: 4,
   color: 0x58C4DD
 })
+neuron.name = "slide5Neuron"
 neuron.position.y -= 1.3
 group.add(neuron);
-
 
 export function initSlide5Neuron(deps: SlideDeps) {
   const { scene, interactions } = deps;
@@ -80,7 +85,7 @@ export function initSlide5Neuron(deps: SlideDeps) {
   const X = ["x", "x^2", "y", "y^2", "xy"]
 
   const lineMat = new LineMaterial({
-    color: 0XF7C797,
+    color: 0x236B8E,
     linewidth: 0.03, // Thickness
     worldUnits: true, // Ensures thickness scales correctly in 3D space
     transparent: true,
@@ -126,5 +131,50 @@ export function initSlide5Neuron(deps: SlideDeps) {
   z.position.z = 0.05
   neuron.add(z)
 
+
+  const slider = createSlider({
+    name: "b",
+    defaultValue: 0,
+    interactions,
+    min: -3,
+    max: 1,
+    step: 0.3,
+    callbackFn: (val) => {
+      if (currentStep !== 10) disks5.position.z = val;
+      beamMat.opacity = 1;
+      decisionCirc5.setRadius(Math.min(0, val))
+    },
+    color: "green"
+  })
+  slider.position.set(1.47, -1.02, 0.00)
+  neuron.add(slider)
 }
 
+
+
+const beamGeom = new LineGeometry().setPositions([
+  1.16, -0.28, -1.00,
+  1.87, -1.05, -1.00
+])
+const beamMat = new LineMaterial({
+  color: 0XF7C797,
+  transparent: true,
+  linewidth: 0.03,
+  worldUnits: true,
+})
+const beam = new Line2(beamGeom, beamMat)
+neuron.add(beam)
+
+export function renderBeam5() {
+  beamMat.opacity -= Math.max(0, (0.1 * beamMat.opacity))
+}
+
+globalStepTracker.registerUpdator(9, p => {
+  setGroupOpacity(group, p)
+})
+
+
+globalStepTracker.registerUpdator(10, p => {
+  // group.position.z = 1 - p;
+  group.rotation.x = ((1 - p) * (Math.PI / 2))
+})

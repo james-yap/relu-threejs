@@ -7,7 +7,7 @@ import { clampStep, getUrlStep, writeUrlStep } from './utils';
 
 export { states };
 
-let currentStep = getUrlStep(states.length) ?? clampStep(DEFAULT_RUNTIME_PARAMS.startingStep, states.length);
+export let currentStep = getUrlStep(states.length) ?? clampStep(DEFAULT_RUNTIME_PARAMS.startingStep, states.length);
 const state = states[currentStep].clone();
 let activeTween: gsap.core.Tween | null = null;
 
