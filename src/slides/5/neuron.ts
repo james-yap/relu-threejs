@@ -49,7 +49,7 @@ export function initSlide5Neuron(deps: SlideDeps) {
 
 
   const eqn2 = createHtmlPlane({
-    html: String.raw`$$y = w_2x^2 + w_4y^2 + b$$`,
+    html: String.raw`$$y = w_1x + w_3y + b$$`,
     className: 'blue-text',
     width: 3,
     height: 0.5,

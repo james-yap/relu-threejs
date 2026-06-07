@@ -62,7 +62,7 @@ export const initSlide3Group = (deps: SlideDeps) => {
   group.add(x1Text);
 
   const yText = createHtmlPlane({
-    html: String.raw`$$ y $$`,
+    html: String.raw`$$ \hat{y} $$`,
     id: 'yTextSlide3',
     className: 'blue-text',
     width: 0.5,
