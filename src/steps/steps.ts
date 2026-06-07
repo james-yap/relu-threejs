@@ -87,6 +87,15 @@ export const states = [
     ease: 'none'
   }),
   StepState.registered({
+    description: "Neuron formulation",
+    cameraX: 18.94,
+    cameraY: -5.14,
+    cameraZ: 1.41,
+    targetX: 18.94,
+    targetY: 0.54,
+    targetZ: 0.27,
+  }),
+  StepState.registered({
     description: "Eqn of circle",
     cameraX: 20,
     cameraY: 0.10,

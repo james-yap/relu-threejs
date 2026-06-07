@@ -4,6 +4,7 @@ import { createNumberPlane } from '@/components/grid';
 import type { SlideDeps } from '@/slides/types';
 import { globalStepTracker } from '@/steps/stepTracker';
 import { Circle } from '@/components/circle';
+import { initSlide5Neuron } from './neuron';
 
 type Slide5Deps = SlideDeps & {
   camera: THREE.Camera;
@@ -70,6 +71,7 @@ group.add(...scatterPoints)
 export function initSlide5(deps: Slide5Deps) {
   const { scene } = deps;
   scene.add(group)
+  initSlide5Neuron(deps)
 }
 
 function createDesmosObject() {
@@ -104,8 +106,6 @@ const circleDuration = 1;
 const totalDuration = circleDuration + lagRatio * (scatterPoints.length - 1);
 
 globalStepTracker.registerUpdator(8, (p) => {
-  // desmos.scale.setScalar(0.01 * (1 - p));
-
   scatterPoints.forEach((i, index) => {
     const point = i.children[0];
     const circ = i.children[1] as Circle;
@@ -121,3 +121,8 @@ globalStepTracker.registerUpdator(8, (p) => {
     circ.setPercentage(localP);
   });
 });
+
+globalStepTracker.registerUpdator(9, p => {
+  desmos.scale.setScalar(0.01 * (1 - p));
+})
+
