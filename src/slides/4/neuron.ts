@@ -87,7 +87,7 @@ export function initSlide4Neuron(deps: SlideDeps) {
 
 
   const y = createHtmlPlane({
-    html: String.raw`$$ y $$`,
+    html: String.raw`$$ \hat{y} $$`,
     className: 'blue-text bg-black',
     width: 0.3,
     height: 0.3,

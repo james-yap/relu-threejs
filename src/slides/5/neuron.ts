@@ -15,11 +15,11 @@ group.position.set(27.00, 0.9, 1.50);
 
 const neuron = new Circle({
   radius: 1,
-  linewidth: 4,
+  linewidth: 6,
   color: 0x58C4DD
 })
 neuron.name = "slide5Neuron"
-neuron.position.y -= 1.3
+neuron.position.y -= 0.5
 group.add(neuron);
 
 export function initSlide5Neuron(deps: SlideDeps) {
@@ -38,50 +38,41 @@ export function initSlide5Neuron(deps: SlideDeps) {
   neuron.add(neuronText);
 
   const eqn = createHtmlPlane({
-    html: String.raw`$$y = w_1x + w_2x^2 + w_3y + w_4y^2 + w_5(xy) + b$$`,
+    html: String.raw`$$z = \sqrt{x^2 + y^2} $$`,
     className: 'blue-text',
-    width: 6,
+    width: 2,
     height: 0.5,
     interactions
   });
   eqn.position.set(-0.04, 1.66, -0.00)
   group.add(eqn)
 
-
-  const eqn2 = createHtmlPlane({
-    html: String.raw`$$y = w_1x + w_3y + b$$`,
-    className: 'blue-text',
-    width: 3,
-    height: 0.5,
-    interactions
-  });
-  eqn2.position.set(-0.04, 1, -0.00)
-  group.add(eqn2)
-
-  const joints: [number, number, number][] = [];
-  const ins: [number, number, number][] = [];
+  // const joints: [number, number, number][] = [];
+  // const ins: [number, number, number][] = [];
   const linePos: number[] = [
+    -1, 0, 0,
+    -2, 0, 0,
     1, 0, 0,
     2, 0, 0,
   ];
 
-  for (let i = 0; i < 5; i++) {
-    const t = (Math.PI / 4) * i + (Math.PI / 2);
-    const x = Math.cos(t)
-    const y = Math.sin(t)
-    const joint: [number, number, number] = [x, y, 0.00];
-    joints.push(joint);
+  // for (let i = 0; i < 5; i++) {
+  //   const t = (Math.PI / 4) * i + (Math.PI / 2);
+  //   const x = Math.cos(t)
+  //   const y = Math.sin(t)
+  //   const joint: [number, number, number] = [x, y, 0.00];
+  //   joints.push(joint);
+  //
+  //   // const r = 1.5
+  //   // ins.push([r * Math.cos(t), r * Math.sin(t), 0.00])
+  //   const inPos: [number, number, number] = [x - 1, y + (2 - i) * 0.2, 0.05];
+  //   ins.push(inPos)
+  //
+  //   linePos.push(...joint)
+  //   linePos.push(...inPos)
+  // }
 
-    // const r = 1.5
-    // ins.push([r * Math.cos(t), r * Math.sin(t), 0.00])
-    const inPos: [number, number, number] = [x - 1, y + (2 - i) * 0.2, 0.05];
-    ins.push(inPos)
-
-    linePos.push(...joint)
-    linePos.push(...inPos)
-  }
-
-  const X = ["x", "x^2", "y", "y^2", "xy"]
+  // const X = ["x", "x^2", "y", "y^2", "xy"]
 
   const lineMat = new LineMaterial({
     color: 0x236B8E,
@@ -93,36 +84,48 @@ export function initSlide5Neuron(deps: SlideDeps) {
   const lines = new LineSegments2(lineGeom, lineMat);
   neuron.add(lines)
 
-  joints.forEach((j, idx) => {
-    const w = createHtmlPlane({
-      html: String.raw`$$\times ` + `w_${idx}$$`,
-      className: 'multiplier',
-      width: 0.45,
-      height: 0.3,
-      depthWrite: true,
-      interactions
-    });
-    w.position.set(j[0], j[1], 0.05)
-    neuron.add(w)
+  // joints.forEach((j, idx) => {
+  //   const w = createHtmlPlane({
+  //     html: String.raw`$$\times ` + `w_${idx}$$`,
+  //     className: 'multiplier',
+  //     width: 0.45,
+  //     height: 0.3,
+  //     depthWrite: true,
+  //     interactions
+  //   });
+  //   w.position.set(j[0], j[1], 0.05)
+  //   neuron.add(w)
+  //
+  //   const x = createHtmlPlane({
+  //     html: `$$${X[idx]}$$`,
+  //     className: 'blue-text bg-black',
+  //     width: 0.45,
+  //     height: 0.45,
+  //     depthWrite: true,
+  //     interactions
+  //   });
+  //   x.position.set(...ins[idx])
+  //   neuron.add(x)
+  // })
 
-    const x = createHtmlPlane({
-      html: `$$${X[idx]}$$`,
-      className: 'blue-text bg-black',
-      width: 0.45,
-      height: 0.45,
-      depthWrite: true,
-      interactions
-    });
-    x.position.set(...ins[idx])
-    neuron.add(x)
-  })
 
+  const X = createHtmlPlane({
+    html: String.raw`$\sqrt{x^2 + y^2}$`,
+    className: 'blue-text bg-black',
+    width: 1.35,
+    height: 0.45,
+    depthWrite: true,
+    interactions
+  });
+  X.position.x -= 2.5
+  X.position.z = 0.05
+  neuron.add(X)
 
   const z = createHtmlPlane({
-    html: `z`,
+    html: String.raw`$\hat{z}$`,
     className: 'blue-text bg-black',
-    width: 0.45,
-    height: 0.45,
+    width: 0.35,
+    height: 0.35,
     depthWrite: true,
     interactions
   });
