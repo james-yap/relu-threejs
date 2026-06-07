@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 export type StepDependencies = {
   scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
+  getCamera: () => THREE.Camera;
   controls: OrbitControls,
   renderer: THREE.WebGLRenderer;
 };

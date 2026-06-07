@@ -3,23 +3,27 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import {
+  CAMERA_MODE_OPTIONS,
   // BULB_POWER_OPTIONS,
   // HEMI_IRRADIANCE_OPTIONS,
+  type CameraMode,
   type RuntimeParams,
 } from '../constants';
 import { getCurrentStep, states, step } from '../steps';
 import { writeUrlControlsEnabled } from './utils';
 import { getPenOverlay } from '../pen';
+import { writeUrlParam, URL_PARAMS } from '../urlParams';
 
 type GuiDependencies = {
   scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
+  getCamera: () => THREE.Camera;
   controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   params: RuntimeParams;
+  setCameraMode: (mode: CameraMode) => void;
 };
 
-export function initGui({ scene, camera, controls, renderer, params }: GuiDependencies) {
+export function initGui({ scene, getCamera, controls, renderer, params, setCameraMode }: GuiDependencies) {
   const gui = new GUI();
 
   // const lightingFolder = gui.addFolder('Lighting');
@@ -41,13 +45,7 @@ export function initGui({ scene, camera, controls, renderer, params }: GuiDepend
     .add(params, 'debug')
     .name('Enabled')
     .onChange((enabled: boolean) => {
-      const url = new URL(window.location.href);
-      if (enabled) {
-        url.searchParams.set('mode', 'debug');
-      } else {
-        url.searchParams.delete('mode');
-      }
-      window.location.href = url.toString();
+      writeUrlParam(URL_PARAMS.mode, enabled ? 'debug' : null, { reload: true });
     });
   debugFolder
     .add(params, 'isControlsEnabled')
@@ -55,6 +53,12 @@ export function initGui({ scene, camera, controls, renderer, params }: GuiDepend
     .onChange((enabled: boolean) => {
       controls.enabled = enabled;
       writeUrlControlsEnabled(enabled);
+    });
+  debugFolder
+    .add(params, 'cameraMode', [...CAMERA_MODE_OPTIONS])
+    .name('Camera')
+    .onChange((mode: CameraMode) => {
+      setCameraMode(mode);
     });
   debugFolder
     .add(debugControls, 'pen')
@@ -73,7 +77,7 @@ export function initGui({ scene, camera, controls, renderer, params }: GuiDepend
 
   const navigateToStep = (targetStep: number, updateDropdown = true) => {
     const clampedStep = THREE.MathUtils.clamp(targetStep, 0, states.length - 1);
-    step(clampedStep, { scene, camera, controls, renderer });
+    step(clampedStep, { scene, getCamera, controls, renderer });
     stepControls.currentStep = stepOptions[clampedStep];
     if (updateDropdown) stepDropdown?.updateDisplay();
   };

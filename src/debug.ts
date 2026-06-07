@@ -7,10 +7,11 @@ import {
   BULB_LUMINOUS_POWERS,
   type RuntimeParams,
 } from './constants';
+import { getUrlParam, writeUrlParam, URL_PARAMS } from './urlParams';
 
 type DebugDependencies = {
   scene: THREE.Scene;
-  camera: THREE.PerspectiveCamera;
+  getCamera: () => THREE.Camera;
   controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   params: RuntimeParams
@@ -24,11 +25,9 @@ const copyPointerButton = document.querySelector('#target-button')! as HTMLButto
 const copyCameraButton = document.querySelector('#cam-button')! as HTMLButtonElement;
 export const debugPanel = document.querySelector('#stats')! as HTMLDivElement;
 
-groupNameInput.defaultValue = new URLSearchParams(window.location.search).get("targetParent") ?? "";
+groupNameInput.defaultValue = getUrlParam(URL_PARAMS.targetParent) ?? "";
 groupNameInput.addEventListener("change", () => {
-  const url = new URL(window.location.href);
-  url.searchParams.set("targetParent", groupNameInput.value);
-  window.history.replaceState(window.history.state, '', url);
+  writeUrlParam(URL_PARAMS.targetParent, groupNameInput.value || null);
 })
 
 copyPointerButton.addEventListener('click', (event) => {
@@ -102,7 +101,7 @@ export function setDebugEnabled(enabled: boolean) {
 export function initDebug(dependencies: DebugDependencies) {
   debugDependencies = dependencies;
 
-  const { camera, renderer, scene, params } = dependencies;
+  const { getCamera, renderer, scene, params } = dependencies;
 
 
   // scene.add(bulbLight);
@@ -111,14 +110,14 @@ export function initDebug(dependencies: DebugDependencies) {
   setDebugEnabled(params.debug);
 
   renderer.domElement.addEventListener('mousemove', (event) => {
-    updatePointerPosition(event, renderer, camera);
+    updatePointerPosition(event, renderer, getCamera());
     updateBulbPosition();
   });
 
   renderer.domElement.addEventListener('pointerdown', async (event) => {
     if (!isCopyMode || event.button !== 0) return;
 
-    updatePointerPosition(event, renderer, camera);
+    updatePointerPosition(event, renderer, getCamera());
     await copyPointerPosition();
   });
 }
@@ -128,7 +127,7 @@ export function renderDebug() {
 
   const { params } = debugDependencies
 
-  updateCameraPositionPanel(debugDependencies.camera);
+  updateCameraPositionPanel(debugDependencies.getCamera());
 
   debugDependencies.renderer.toneMappingExposure = params.exposure;
   debugDependencies.renderer.shadowMap.enabled = params.shadows;
@@ -200,7 +199,7 @@ async function copyCameraPosition() {
   if (debugDependencies === null) return;
 
   try {
-    await navigator.clipboard.writeText(formatCameraPosition(debugDependencies.camera, debugDependencies.controls));
+    await navigator.clipboard.writeText(formatCameraPosition(debugDependencies.getCamera(), debugDependencies.controls));
     copyCameraButton.style.borderColor = "green";
   } catch (error) {
     copyCameraButton.style.borderColor = "red";

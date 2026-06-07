@@ -1,3 +1,5 @@
+import { getIntegerUrlParam, URL_PARAMS } from '../urlParams';
+
 type StepCallback = (percentage: number) => void;
 
 class StepTracker {
@@ -18,8 +20,7 @@ class StepTracker {
 
   registerUpdator(targetStep: number, callback: StepCallback) {
     // run once from query params
-    const urlParams = new URLSearchParams(window.location.search);
-    const defaultStep = parseInt(urlParams.get('step') ?? '0');
+    const defaultStep = getIntegerUrlParam(URL_PARAMS.step, 0) ?? 0;
     callback(targetStep <= defaultStep ? 1 : 0);
 
     const updators = this._updators;

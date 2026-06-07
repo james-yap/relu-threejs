@@ -1,5 +1,6 @@
-const urlParams = new URLSearchParams(window.location.search);
-export const DEBUG = urlParams.get('mode') === "debug";
+import { getBooleanUrlParam, getEnumUrlParam, getUrlParam, URL_PARAMS } from './urlParams';
+
+export const DEBUG = getUrlParam(URL_PARAMS.mode) === "debug";
 
 // ref for lumens: http://www.power-sure.com/lumens.htm
 export const BULB_LUMINOUS_POWERS = {
@@ -34,6 +35,9 @@ export const HEMI_LUMINOUS_IRRADIANCES = {
 export type HemiIrradiance = keyof typeof HEMI_LUMINOUS_IRRADIANCES;
 export const HEMI_IRRADIANCE_OPTIONS = Object.keys(HEMI_LUMINOUS_IRRADIANCES) as HemiIrradiance[];
 
+export const CAMERA_MODE_OPTIONS = ['perspective', 'orthographic'] as const;
+export type CameraMode = typeof CAMERA_MODE_OPTIONS[number];
+
 export type RuntimeParams = {
   debug: boolean;
   shadows: boolean;
@@ -43,6 +47,7 @@ export type RuntimeParams = {
   bulbDist: number;
   startingStep: number;
   isControlsEnabled: boolean;
+  cameraMode: CameraMode;
 };
 
 export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
@@ -53,5 +58,6 @@ export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   hemiIrradiance: HEMI_IRRADIANCE_OPTIONS[3],
   bulbDist: 2,
   startingStep: 0,
-  isControlsEnabled: urlParams.get('controls') === "true"
+  isControlsEnabled: getBooleanUrlParam(URL_PARAMS.controls),
+  cameraMode: getEnumUrlParam(URL_PARAMS.camera, CAMERA_MODE_OPTIONS, 'perspective'),
 };

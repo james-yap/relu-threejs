@@ -24,7 +24,7 @@ export function step(targetStep: number, deps: StepDependencies) {
   const targetState = states[nextStep];
   if (!targetState) return;
 
-  const { camera, controls } = deps
+  const { getCamera, controls } = deps
   currentStep = nextStep;
   writeUrlStep(nextStep);
   activeTween?.kill();
@@ -32,6 +32,7 @@ export function step(targetStep: number, deps: StepDependencies) {
   activeTween = gsap.to(state, {
     ...targetState.toTweenVars(),
     onUpdate: () => {
+      const camera = getCamera();
       camera.position.set(state.cameraX, state.cameraY, state.cameraZ);
       controls.target.set(state.targetX, state.targetY, state.targetZ);
       controls.update();

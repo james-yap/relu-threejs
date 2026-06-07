@@ -9,21 +9,24 @@ import { setupResize } from './eventListeners';
 import { setupPolyfill } from './setupPolyfill'
 import { debugPanel, initDebug, renderDebug } from './debug'
 import { initSlide1 } from './slides/1';
-import { type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
+import { type CameraMode, type RuntimeParams, DEFAULT_RUNTIME_PARAMS, HEMI_LUMINOUS_IRRADIANCES } from './constants';
 import { initGui } from './gui';
 import { getStartingState } from './steps';
 import { initSlide2 } from './slides/2';
 import { initSlide3 } from './slides/3';
-import { getUrlControlsEnabled } from './gui/utils';
 import { renderBeams } from './slides/3/group';
 import { initSlide4 } from './slides/4';
 import { initSlide5 } from './slides/5';
 import { renderBeam5 } from './slides/5/neuron';
+import { createAppCamera, syncCameraTransform, type AppCamera } from './camera';
+import { writeUrlParam, URL_PARAMS } from './urlParams';
 
 const params: RuntimeParams = { ...DEFAULT_RUNTIME_PARAMS };
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+let cameraMode: CameraMode = params.cameraMode;
+let camera: AppCamera = createAppCamera(cameraMode);
+const getCamera = () => camera;
 const interactions = new InteractionManager();
 const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x0f0e0d, 0.02);
 
@@ -46,14 +49,14 @@ const startingCameraPos: [number, number, number] = [startingState.cameraX, star
 const startingTarget: [number, number, number] = [startingState.targetX, startingState.targetY, startingState.targetZ]
 
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enabled = getUrlControlsEnabled();
+controls.enabled = params.isControlsEnabled;
 controls.minDistance = 1;
 controls.maxDistance = 20;
 
-initDebug({ scene, camera, controls, renderer, params });
-initGui({ scene, camera, controls, renderer, params });
+initDebug({ scene, getCamera, controls, renderer, params });
+initGui({ scene, getCamera, controls, renderer, params, setCameraMode });
 setupPolyfill(debugPanel);
-setupResize(camera, [renderer, cssRenderer]);
+setupResize(getCamera, [renderer, cssRenderer]);
 
 scene.add(hemiLight);
 
@@ -64,6 +67,20 @@ camera.lookAt(...startingTarget)
 
 interactions.connect(renderer, camera);
 
+function setCameraMode(mode: CameraMode) {
+  if (mode === cameraMode) return;
+
+  const nextCamera = createAppCamera(mode);
+  syncCameraTransform(camera, nextCamera);
+  camera = nextCamera;
+  cameraMode = mode;
+  params.cameraMode = mode;
+
+  controls.object = camera;
+  controls.update();
+  interactions.connect(renderer, camera);
+  writeUrlParam(URL_PARAMS.camera, mode);
+}
 
 function animate(_time: number) {
   hemiLight.intensity = HEMI_LUMINOUS_IRRADIANCES[params.hemiIrradiance];
@@ -83,5 +100,5 @@ initSlide1({ scene, interactions })
 initSlide2({ scene, interactions })
 initSlide3({ scene, interactions })
 initSlide4({ scene, interactions })
-initSlide5({ scene, interactions, camera, renderer })
+initSlide5({ scene, interactions, renderer })
 

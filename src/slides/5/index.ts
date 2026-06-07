@@ -7,7 +7,6 @@ import { Circle } from '@/components/circle';
 import { initSlide5Neuron } from './neuron';
 
 type Slide5Deps = SlideDeps & {
-  camera: THREE.Camera;
   renderer: THREE.WebGLRenderer;
 };
 

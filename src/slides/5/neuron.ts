@@ -140,7 +140,8 @@ export function initSlide5Neuron(deps: SlideDeps) {
     max: 1,
     step: 0.3,
     callbackFn: (val) => {
-      if (currentStep !== 10) disks5.position.z = val;
+      disks5.position.z = val;
+      // if (currentStep !== 10) disks5.position.z = val;
       beamMat.opacity = 1;
       decisionCirc5.setRadius(Math.min(0, val))
     },
