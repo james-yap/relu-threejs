@@ -59,5 +59,5 @@ export const DEFAULT_RUNTIME_PARAMS: RuntimeParams = {
   bulbDist: 2,
   startingStep: 0,
   isControlsEnabled: getBooleanUrlParam(URL_PARAMS.controls),
-  cameraMode: getEnumUrlParam(URL_PARAMS.camera, CAMERA_MODE_OPTIONS, 'perspective'),
+  cameraMode: getEnumUrlParam(URL_PARAMS.camera, CAMERA_MODE_OPTIONS, 'orthographic'),
 };

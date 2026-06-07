@@ -36,9 +36,11 @@ export function updateCameraViewport(camera: AppCamera) {
   camera.updateProjectionMatrix();
 }
 
-export function syncCameraTransform(source: THREE.Camera, target: THREE.Camera) {
+export function syncCameraTransform(source: AppCamera, target: AppCamera) {
   target.position.copy(source.position);
   target.quaternion.copy(source.quaternion);
   target.up.copy(source.up);
+  target.zoom = source.zoom;
+  target.updateProjectionMatrix();
   target.updateMatrixWorld();
 }

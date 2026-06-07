@@ -13,10 +13,11 @@ import { getCurrentStep, states, step } from '../steps';
 import { writeUrlControlsEnabled } from './utils';
 import { getPenOverlay } from '../pen';
 import { writeUrlParam, URL_PARAMS } from '../urlParams';
+import type { AppCamera } from '../camera';
 
 type GuiDependencies = {
   scene: THREE.Scene;
-  getCamera: () => THREE.Camera;
+  getCamera: () => AppCamera;
   controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   params: RuntimeParams;

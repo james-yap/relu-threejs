@@ -12,7 +12,7 @@ type Slide5Deps = SlideDeps & {
 
 const group = new THREE.Group();
 group.name = "circlesGroup"
-group.position.set(16.02, -0.02, 0.00)
+group.position.set(20.02, -0.02, 0.00)
 
 const plane = createNumberPlane({
   xRange: [-1.5, 1.5, 0.5],
@@ -51,8 +51,8 @@ x.forEach((xVal, i) => {
 
   const circ = new Circle({
     radius: actualRadius,
-    percentage: 1,
-    linewidth: normalizedRadius * 5
+    percentage: 0,
+    linewidth: normalizedRadius * 3
   })
   circ.material.color.lerpColors(
     new THREE.Color(0x00FF00),
@@ -60,7 +60,7 @@ x.forEach((xVal, i) => {
     normalizedRadius,
   )
   circ.material.transparent = true;
-  circ.material.opacity = 0.5;
+  circ.material.opacity = 0.3;
   // circ.rotateZ(Math.PI * 2 * Math.random())
   container.add(circ)
 
@@ -86,7 +86,7 @@ function createDesmosObject() {
   wrapper.className = 'w-[500px] h-[500px] bg-white border border-[#ccc] pointer-events-auto';
 
   const iframe = document.createElement('iframe');
-  iframe.className = 'block w-[800px] h-[600px] border-0 bg-white [backface-visibility:hidden]';
+  iframe.className = 'block w-[700px] h-[400px] border-0 bg-white [backface-visibility:hidden]';
   iframe.src = 'https://www.desmos.com/calculator/zgtart4esh';
   iframe.title = 'Desmos calculator';
   wrapper.appendChild(iframe);
@@ -137,18 +137,20 @@ globalStepTracker.registerUpdator(9, p => {
 
 globalStepTracker.registerUpdator(10, p => {
   disks5.children.forEach((i, index) => {
-    const point = i.children[0];
+    // const point = i.children[0];
     const circ = i.children[1] as Circle;
-
+    //
     const localP = THREE.MathUtils.clamp(
       (p * totalDuration - index * lagRatio) / circleDuration,
       0,
       1,
     );
-    const easedP = THREE.MathUtils.smootherstep(localP, 0, 1);
+    // const easedP = THREE.MathUtils.smootherstep(localP, 0, 1);
 
-    i.position.z = (1 - easedP) * point.position.length();
-    circ.setPercentage(1 - localP);
+    // i.position.z = (1 - easedP) * point.position.length();
+
+    // prevent first time one-shot conflict with step 8's updator
+    if (localP > 0.01) circ.setPercentage(1 - localP);
   });
 })
 

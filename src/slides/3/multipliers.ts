@@ -32,8 +32,8 @@ export function initSlide3Multipliers(deps: SlideDeps) {
     slide3_b.material.opacity = p;
   })
 
-  slide3W.position.set(9.21, 2.24, 0.05);
-  slide3_b.position.set(10.84, 2.24, 0.05);
+  slide3W.position.set(8.21, 2.24, 0.05);
+  slide3_b.position.set(9.84, 2.24, 0.05);
 
   scene.add(slide3W)
 

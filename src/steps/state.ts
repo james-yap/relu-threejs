@@ -13,13 +13,14 @@ type StepStateType = {
   targetX: number;
   targetY: number;
   targetZ: number;
+  zoom: number;
   step: number;
 }
 
 // make duration and ease optional
 type StepStateInit =
-  Omit<StepStateType, 'duration' | 'ease'> &
-  Partial<Pick<StepStateType, 'duration' | 'ease'>>;
+  Omit<StepStateType, 'duration' | 'ease' | 'zoom'> &
+  Partial<Pick<StepStateType, 'duration' | 'ease' | 'zoom'>>;
 
 export class StepState {
   private static totalSteps = 0;
@@ -30,6 +31,7 @@ export class StepState {
       ...state,
       duration: state.duration ?? 1,
       ease: state.ease ?? 'power2.inOut',
+      zoom: state.zoom ?? 1,
     };
   }
 
@@ -59,6 +61,9 @@ export class StepState {
 
   get targetZ() { return this._state.targetZ; }
   set targetZ(targetZ: number) { this._state.targetZ = targetZ; }
+
+  get zoom() { return this._state.zoom; }
+  set zoom(zoom: number) { this._state.zoom = zoom; }
 
   get step() { return this._state.step; }
   set step(step: number) {

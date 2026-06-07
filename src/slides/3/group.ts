@@ -9,7 +9,7 @@ import { setGroupOpacity } from '@/utils';
 import { Line2, LineGeometry, LineMaterial, LineSegments2 } from 'three/examples/jsm/Addons.js';
 
 export const group = new THREE.Group();
-group.position.set(10.00, 2.25, 0.00);
+group.position.set(9.00, 2.25, 0.00);
 
 export const createCircleGeom = (percentage: number = 1) => {
   const radians = 2 * Math.PI * percentage;
@@ -134,10 +134,10 @@ export const initSlide3Group = (deps: SlideDeps) => {
 
 const wBeamGeom = new LineGeometry();
 wBeamGeom.setPositions([
-  9.33, 1.34, 0.00,
-  9.22, 2.22, 0.00,
-  9.33, 1.34, 0.00,
-  10.15, 3.72, -0.00
+  8.33, 1.34, 0.00,
+  8.22, 2.22, 0.00,
+  8.33, 1.34, 0.00,
+  8.9, 3.72, -0.00
 ])
 const wBeamMat = new LineMaterial({
   color: 0XF7C797,
@@ -149,10 +149,10 @@ const wBeam = new LineSegments2(wBeamGeom, wBeamMat);
 
 const bBeamGeom = new LineGeometry();
 bBeamGeom.setPositions([
-  10.71, 1.26, 0.00,
-  10.35, 2.23, 0.00,
-  10.71, 1.26, 0.00,
-  10.68, 3.76, 0.00
+  9.71, 1.26, 0.00,
+  9.35, 2.23, 0.00,
+  9.71, 1.26, 0.00,
+  9.68, 3.76, 0.00
 ])
 const bBeamMat = wBeamMat.clone();
 const bBeam = new LineSegments2(bBeamGeom, bBeamMat);
@@ -170,13 +170,13 @@ const bridgeMat = new LineMaterial({
 })
 const x1BridgeGeom = new LineGeometry();
 x1BridgeGeom.setPositions([
-  9, 2.23, -0.00,
-  8.2, 2.25, 0.00
+  8, 2.23, -0.00,
+  7.2, 2.25, 0.00
 ])
 const x1Bridge = new Line2(x1BridgeGeom, bridgeMat);
 const x2BridgeGeom = new LineGeometry();
 x2BridgeGeom.setPositions([
-  10.80, 2.24, 0.00,
-  11.83, 2.23, -0.00
+  9.80, 2.24, 0.00,
+  10.83, 2.23, -0.00
 ])
 const x2Bridge = new Line2(x2BridgeGeom, bridgeMat);

@@ -61,6 +61,8 @@ setupResize(getCamera, [renderer, cssRenderer]);
 scene.add(hemiLight);
 
 camera.position.set(...startingCameraPos)
+camera.zoom = startingState.zoom;
+camera.updateProjectionMatrix();
 controls.target.set(...startingTarget)
 controls.update()
 camera.lookAt(...startingTarget)

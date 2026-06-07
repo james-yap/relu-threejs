@@ -9,7 +9,7 @@ import { setGroupOpacity } from '@/utils';
 
 const group = new THREE.Group();
 group.name = "slide4NeuronGroup"
-group.position.set(9.93, -2.22, 0.00);
+group.position.set(8.93, -2.22, 0.00);
 
 const neuron = new THREE.Mesh(createCircleGeom(), new THREE.MeshBasicMaterial({
   color: 0x58C4DD

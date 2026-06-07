@@ -8,11 +8,10 @@ import { globalStepTracker } from '@/steps/stepTracker';
 import { setGroupOpacity } from '@/utils';
 import { createSlider } from '@/components/slider';
 import { decisionCirc5, disks5 } from '.';
-import { currentStep } from '@/steps';
 
 const group = new THREE.Group();
 group.name = "slide5NeuronGroup"
-group.position.set(22.84, 1, 1);
+group.position.set(27.00, 0.9, 1.50);
 
 const neuron = new Circle({
   radius: 1,
@@ -154,8 +153,8 @@ export function initSlide5Neuron(deps: SlideDeps) {
 
 
 const beamGeom = new LineGeometry().setPositions([
-  1.16, -0.28, -1.00,
-  1.87, -1.05, -1.00
+  0.5, -0.1, 0,
+  1, -0.8, 0
 ])
 const beamMat = new LineMaterial({
   color: 0XF7C797,
@@ -176,6 +175,6 @@ globalStepTracker.registerUpdator(9, p => {
 
 
 globalStepTracker.registerUpdator(10, p => {
-  // group.position.z = 1 - p;
+  // group.position.z = 1.5 - p;
   group.rotation.x = ((1 - p) * (Math.PI / 2))
 })

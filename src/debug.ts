@@ -8,10 +8,11 @@ import {
   type RuntimeParams,
 } from './constants';
 import { getUrlParam, writeUrlParam, URL_PARAMS } from './urlParams';
+import type { AppCamera } from './camera';
 
 type DebugDependencies = {
   scene: THREE.Scene;
-  getCamera: () => THREE.Camera;
+  getCamera: () => AppCamera;
   controls: OrbitControls;
   renderer: THREE.WebGLRenderer;
   params: RuntimeParams
@@ -138,7 +139,7 @@ export function renderDebug() {
   bulbMat.emissiveIntensity = bulbLight.intensity / Math.pow(0.02, 2.0); // convert from intensity to irradiance at bulb surface
 }
 
-function updateCameraPositionPanel(camera: THREE.Camera) {
+function updateCameraPositionPanel(camera: AppCamera) {
   camera.getWorldPosition(cameraWorldPos);
 
   const { x, y, z } = cameraWorldPos;
@@ -146,6 +147,7 @@ function updateCameraPositionPanel(camera: THREE.Camera) {
 x: ${x.toFixed(2)}
 y: ${y.toFixed(2)}
 z: ${z.toFixed(2)}
+zoom: ${camera.zoom.toFixed(2)}
 
 Pointer position
 x: ${pointerOnPlane.x.toFixed(2)}
@@ -217,11 +219,12 @@ function formatPointerPosition(parent?: THREE.Object3D) {
   return `${pos.x.toFixed(2)}, ${pos.y.toFixed(2)}, ${pos.z.toFixed(2)}`;
 }
 
-function formatCameraPosition(camera: THREE.Camera, controls: OrbitControls) {
+function formatCameraPosition(camera: AppCamera, controls: OrbitControls) {
   camera.getWorldPosition(cameraWorldPos);
   return `cameraX: ${cameraWorldPos.x.toFixed(2)},
 cameraY: ${cameraWorldPos.y.toFixed(2)},
 cameraZ: ${cameraWorldPos.z.toFixed(2)},
+zoom: ${camera.zoom.toFixed(2)},
 targetX: ${controls.target.x.toFixed(2)},
 targetY: ${controls.target.y.toFixed(2)},
 targetZ: ${controls.target.z.toFixed(2)},`;

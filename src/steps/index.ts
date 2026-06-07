@@ -34,6 +34,8 @@ export function step(targetStep: number, deps: StepDependencies) {
     onUpdate: () => {
       const camera = getCamera();
       camera.position.set(state.cameraX, state.cameraY, state.cameraZ);
+      camera.zoom = state.zoom;
+      camera.updateProjectionMatrix();
       controls.target.set(state.targetX, state.targetY, state.targetZ);
       controls.update();
       camera.lookAt(state.targetX, state.targetY, state.targetZ);
